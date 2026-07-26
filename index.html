@@ -1,1 +1,1928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Sequence — climate first, challenge second</title>
+<meta name="description" content="A teaching tool on psychological safety, built on the McKinsey Global Survey (2021) and Amy Edmondson's psychological safety × accountability matrix.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   §6.1 TOKENS
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --bone:        #F2ECDF;
+  --ink:         #141210;
+  --ochre:       #E9A21B;
+  --oxblood:     #A32B26;
+  --ultramarine: #1D3FBF;
+  --jade:        #3FBFA8;
+  --slate:       #6E675F;
 
+  --support:     #86D1BE;      /* jade at 60% tint over bone */
+  --key: 3px;
+  --shadow: 7px 7px 0 var(--ink);
+
+  --f-display: "Archivo Black", "Helvetica Neue", Impact, sans-serif;
+  --f-body:    "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:    "Space Mono", "SF Mono", Consolas, monospace;
+
+  /* solo scale is the default; class mode overrides */
+  --t-display: 44px;
+  --t-head:    28px;
+  --t-body:    18px;
+  --t-label:   13px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}  /* the 180ms slide must not flash a scrollbar */
+body{
+  background:var(--bone);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:var(--t-body);
+  line-height:1.42;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+body.is-ink{background:var(--ink);color:var(--bone)}
+
+/* class-mode scale — §6.2. Body never below 28px: it is projected. */
+body.mode-class{ --t-display:72px; --t-head:40px; --t-body:28px; --t-label:18px; }
+@media (max-width:1500px){
+  body.mode-class{ --t-display:56px; --t-head:34px; --t-body:28px; --t-label:17px; }
+}
+@media (max-height:780px){
+  body.mode-class{ --t-display:48px; --t-head:30px; --t-body:28px; --t-label:16px; }
+}
+
+h1,h2,h3,.display{
+  font-family:var(--f-display);
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:-0.02em;
+  line-height:1.04;
+  margin:0;
+}
+h1{font-size:var(--t-display)}
+h2{font-size:var(--t-head)}
+h3{font-size:calc(var(--t-body) * 1.05)}
+p{margin:0 0 .7em}
+p:last-child{margin-bottom:0}
+
+.mono{
+  font-family:var(--f-mono);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  font-size:var(--t-label);
+}
+.mono-b{font-weight:700}
+
+/* ─────────────────────────────────────────────────────────────
+   §6.3 PANELS, BUTTONS, KEYLINES
+   ───────────────────────────────────────────────────────────── */
+.panel{
+  background:var(--bone);
+  border:var(--key) solid var(--ink);
+  box-shadow:var(--shadow);
+  padding:22px 24px;
+  position:relative;
+  z-index:1;
+}
+body.is-ink .panel{background:var(--ink);border-color:var(--bone);box-shadow:7px 7px 0 var(--slate)}
+
+button{
+  font-family:var(--f-mono);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  font-size:var(--t-label);
+  background:var(--bone);
+  color:var(--ink);
+  border:var(--key) solid var(--ink);
+  box-shadow:var(--shadow);
+  padding:14px 22px;
+  cursor:pointer;
+  transition:none;
+}
+button:active{box-shadow:2px 2px 0 var(--ink);transform:translate(5px,5px)}
+button[disabled]{opacity:.4;cursor:not-allowed}
+button[disabled]:active{box-shadow:var(--shadow);transform:none}
+button.primary{background:var(--ultramarine);color:var(--bone);border-color:var(--ink)}
+button.ghost{box-shadow:3px 3px 0 var(--ink);padding:10px 16px}
+button.ghost:active{box-shadow:1px 1px 0 var(--ink);transform:translate(2px,2px)}
+body.is-ink button{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+body.is-ink button.primary{background:var(--ochre);color:var(--ink)}
+
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--ochre);outline-offset:3px}
+
+/* ─────────────────────────────────────────────────────────────
+   LAYOUT
+   ───────────────────────────────────────────────────────────── */
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#bg svg{position:absolute;display:block}
+main{position:relative;z-index:1}
+.screen{display:none;padding:34px clamp(16px,4vw,64px) 72px;max-width:1780px;margin:0 auto}
+.screen.on{display:block}
+body.mode-class .screen{padding:24px clamp(16px,3vw,52px) 44px}
+
+/* §6.4 MOTION — the only transition in the file */
+@keyframes slidein{from{transform:translateX(46px)}to{transform:translateX(0)}}
+.slide{animation:slidein 180ms linear}
+@media (prefers-reduced-motion:reduce){
+  .slide{animation:none}
+  button:active{transform:none}
+  .choice:active{transform:none}
+}
+
+.rule{height:var(--key);background:var(--ink);border:0;margin:18px 0}
+body.is-ink .rule{background:var(--bone)}
+.srcstrip{
+  font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.06em;
+  font-size:var(--t-label);color:var(--slate);margin-top:24px;line-height:1.5;max-width:96ch;
+}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ─────────────────────────────────────────────────────────────
+   LANDING
+   ───────────────────────────────────────────────────────────── */
+#s-landing{max-width:1200px}
+.land-head{margin-bottom:38px}
+.land-head .display{font-size:clamp(54px,9.4vw,118px);display:block}
+.land-sub{font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.12em;font-size:16px;margin-top:16px}
+.modes{display:flex;gap:36px;flex-wrap:wrap;align-items:flex-start}
+.mode-card{
+  flex:1 1 330px;min-width:300px;text-align:left;padding:26px 26px 22px;
+  display:block;font-family:var(--f-body);text-transform:none;letter-spacing:0;font-weight:400;
+}
+.mode-card:nth-of-type(2){margin-top:26px}   /* §6.3 asymmetric device — landing */
+.mode-card .mh{font-family:var(--f-display);text-transform:uppercase;letter-spacing:-.02em;
+  font-size:34px;display:block;margin-bottom:12px}
+.mode-card .tag{font-size:19px;line-height:1.42;display:block;margin-bottom:16px}
+.mode-card .meta{font-family:var(--f-mono);text-transform:uppercase;font-size:13px;letter-spacing:.06em;color:var(--slate);display:block}
+.mode-card.class-c{border-left:14px solid var(--ultramarine)}
+.mode-card.solo-c{border-left:14px solid var(--ochre)}
+
+/* ─────────────────────────────────────────────────────────────
+   METERS — §6.5 signature element
+   ───────────────────────────────────────────────────────────── */
+.meters{display:flex;flex-direction:column;gap:18px}
+.meter-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.meter-name{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  font-size:var(--t-label);width:9ch}
+.meter{display:flex;gap:4px;height:26px}
+body.mode-class .meter{height:36px}
+.seg{flex:1;border:var(--key) solid var(--ink);background:var(--bone)}
+.seg.f-climate{background:var(--ochre)}
+.seg.f-safety{background:var(--jade)}
+.seg.f-delivery{background:var(--ink)}
+.meter-val{font-family:var(--f-mono);font-weight:700;font-size:var(--t-label);width:3ch;text-align:right}
+
+/* ─────────────────────────────────────────────────────────────
+   CLASS MODE
+   ───────────────────────────────────────────────────────────── */
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:18px}
+.chip{
+  font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  font-size:var(--t-label);border:var(--key) solid var(--ink);padding:5px 11px;background:var(--bone);
+}
+.chip.inclusive{background:var(--jade)}
+.chip.directive{background:var(--oxblood);color:var(--bone)}
+
+.round-grid{display:grid;grid-template-columns:1fr 420px;gap:26px;align-items:start}
+@media (max-width:1150px){.round-grid{grid-template-columns:1fr}}
+
+/* 720p projection: body stays at 28px, so the round screen is laid out in three
+   columns and tightened to fit a 1280×720 stage without scrolling. */
+@media (min-width:1200px) and (max-height:820px){
+  .round-grid{grid-template-columns:0.95fr 1.45fr 320px;gap:18px}
+  .round-grid > .rd-col{display:contents}
+  .round-grid .hear-panel{margin-top:0 !important}
+  .round-grid .meters-panel{margin-top:14px !important}
+  body.mode-class .screen{padding:16px clamp(16px,2.4vw,40px) 20px}
+  body.mode-class .panel{padding:15px 18px}
+  body.mode-class .topbar{margin-bottom:12px}
+  body.mode-class .meters{gap:12px}
+  body.mode-class .meter{height:28px}
+  body.mode-class .hear li{margin-bottom:9px}
+  body.mode-class .act{padding:10px}
+  body.mode-class .act .adesc{min-height:0}
+  body.mode-class .act .arow{margin-top:9px}
+  body.mode-class .acts{gap:12px}
+  body.mode-class .spend-head{margin-bottom:11px}
+  body.mode-class .commit-row{margin-top:12px}
+  body.mode-class .situation{line-height:1.08}
+}
+.situation{font-family:var(--f-display);text-transform:uppercase;letter-spacing:-0.02em;
+  font-size:calc(var(--t-head) * .86);line-height:1.12}
+.event-flag{
+  margin-top:18px;border:var(--key) solid var(--ink);background:var(--ochre);color:var(--ink);
+  padding:10px 14px;font-family:var(--f-mono);font-weight:700;text-transform:uppercase;
+  letter-spacing:.05em;font-size:var(--t-label);
+}
+.hear-label{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  font-size:var(--t-label);color:var(--slate);margin-bottom:12px}
+.hear{margin:0;padding:0}
+.hear li{list-style:none;margin:0 0 13px;padding-left:24px;position:relative}
+.hear li:before{content:"\203A";position:absolute;left:0;color:var(--slate)}
+.hear li:last-child{margin-bottom:0}
+.who{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  font-size:calc(var(--t-body) * .7)}
+.stage{color:var(--slate);font-style:italic}
+
+.spend-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media (max-width:950px){.acts{grid-template-columns:repeat(2,1fr)}}
+.act{border:var(--key) solid var(--ink);background:var(--bone);padding:14px}
+.act .aname{font-family:var(--f-display);text-transform:uppercase;letter-spacing:-0.02em;
+  font-size:calc(var(--t-body) * 1.04);margin-bottom:7px}
+.act .adesc{font-size:calc(var(--t-body) * .74);line-height:1.34;min-height:3.4em}
+.act .arow{display:flex;align-items:center;gap:10px;margin-top:14px}
+.act .arow button{padding:7px 0;width:46px;box-shadow:3px 3px 0 var(--ink);text-align:center}
+.act .arow button:active{box-shadow:1px 1px 0 var(--ink);transform:translate(2px,2px)}
+.act .n{font-family:var(--f-mono);font-weight:700;font-size:calc(var(--t-body) * 1.14);width:2ch;text-align:center}
+.act .key{margin-left:auto;font-family:var(--f-mono);font-size:calc(var(--t-label)*.85);color:var(--slate)}
+.act.b-support{border-top:14px solid var(--support)}
+.act.b-consult{border-top:14px solid var(--ultramarine)}
+.act.b-challenge{border-top:14px dashed var(--ultramarine)}
+.act.b-direct{border-top:14px solid var(--oxblood)}
+.left-count{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.commit-row{display:flex;gap:18px;align-items:center;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+
+/* consequence card */
+.cons{max-width:960px;margin-left:24px}      /* asymmetric device — consequence screen */
+.deltas{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0 24px}
+.delta{border:var(--key) solid var(--ink);padding:12px 18px;min-width:190px}
+.delta .dl{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:var(--t-label)}
+.delta .dv{font-family:var(--f-mono);font-weight:700;font-size:calc(var(--t-head)*.92);line-height:1.12}
+.delta.pos{background:var(--jade);color:var(--ink)}
+.delta.neg{background:var(--oxblood);color:var(--bone)}
+.delta.flat{background:var(--bone);color:var(--ink)}
+.cons-line{font-family:var(--f-display);text-transform:uppercase;letter-spacing:-0.02em;
+  font-size:calc(var(--t-head)*.84);line-height:1.16}
+
+/* setup */
+.setup-opts{display:flex;gap:20px;flex-wrap:wrap;margin:24px 0 8px}
+.opt{border:var(--key) solid var(--ink);background:var(--bone);padding:16px 22px;cursor:pointer;
+  font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+  font-size:var(--t-label);box-shadow:none}
+.opt:active{box-shadow:none;transform:none}
+.opt[aria-pressed="true"]{background:var(--ink);color:var(--bone)}
+.opt[aria-pressed="true"].o-inclusive{background:var(--jade);color:var(--ink)}
+.opt[aria-pressed="true"].o-directive{background:var(--oxblood);color:var(--bone)}
+
+/* ─────────────────────────────────────────────────────────────
+   DEBRIEF
+   ───────────────────────────────────────────────────────────── */
+.debrief-nav{display:flex;gap:14px;align-items:center;margin-top:26px;flex-wrap:wrap}
+.panel-dots{display:flex;gap:6px;margin-left:auto}
+.pdot{width:16px;height:16px;border:var(--key) solid var(--ink);background:var(--bone)}
+.pdot.on{background:var(--ink)}
+#chartWrap{height:420px;border:var(--key) solid var(--ink);background:var(--bone);position:relative}
+@media (max-width:900px){#chartWrap{height:320px}}
+#chart{display:block;width:100%;height:100%}
+.legend{display:flex;gap:24px;flex-wrap:wrap;margin-top:14px}
+.legend span{font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.06em;font-size:var(--t-label);
+  display:flex;align-items:center;gap:8px}
+.swatch{width:28px;height:12px;border:var(--key) solid var(--ink);display:inline-block}
+
+/* gate panel */
+.gate-wrap{position:relative;margin-top:26px}
+.gate-chart{display:flex;gap:10px;align-items:flex-end;height:300px;padding-right:152px;
+  border-bottom:var(--key) solid var(--ink);position:relative;z-index:1}
+.gate-col{flex:1;border:var(--key) solid var(--ink);background:var(--ochre)}
+.gate-col.chal-below{background:var(--oxblood)}
+.gate-col.chal-above{background:var(--jade)}
+.gate-labels{display:flex;gap:10px;margin-top:8px;padding-right:152px}
+.gate-labels div{flex:1;text-align:center;font-family:var(--f-mono);font-size:var(--t-label)}
+.gate-line{position:absolute;left:0;right:0;border-top:var(--key) dashed var(--ink);z-index:3}
+.gate-line b{position:absolute;right:0;top:-15px;font-family:var(--f-mono);font-weight:700;
+  font-size:var(--t-label);background:var(--bone);border:var(--key) solid var(--ink);padding:2px 8px}
+
+/* named behaviours */
+.named{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:22px}
+@media (max-width:950px){.named{grid-template-columns:1fr}}
+.nb{border:var(--key) solid var(--ink);padding:16px 18px}
+.nb .tag{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  font-size:var(--t-label);display:inline-block;padding:4px 10px;border:var(--key) solid var(--ink);margin-bottom:10px}
+.nb.n-support .tag{background:var(--support);color:var(--ink)}
+.nb.n-consult .tag{background:var(--ultramarine);color:var(--bone)}
+.nb.n-challenge .tag{background:var(--bone);color:var(--ultramarine);border-style:dashed;border-color:var(--ultramarine)}
+.nb.n-direct .tag{background:var(--oxblood);color:var(--bone)}
+.nb h3{margin-bottom:6px}
+.nb .fnd{font-size:calc(var(--t-body)*.82);line-height:1.42}
+.nb .coef{font-family:var(--f-mono);font-weight:700;font-size:calc(var(--t-body)*.72);
+  margin-top:10px;display:block;letter-spacing:.04em;text-transform:uppercase}
+
+/* ─────────────────────────────────────────────────────────────
+   §5 THE SHARED MATRIX
+   ───────────────────────────────────────────────────────────── */
+.matrix-holder{display:flex;gap:34px;flex-wrap:wrap;align-items:flex-start}
+.matrix-outer{flex:1 1 300px;min-width:0;max-width:500px}
+body.mode-class .matrix-outer{max-width:560px}
+.matrix-axes{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto;gap:10px}
+.axis-y{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--f-mono);font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;font-size:var(--t-label);display:flex;
+  justify-content:space-between;align-items:center}
+.axis-x{grid-column:2;display:flex;justify-content:space-between;font-family:var(--f-mono);font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;font-size:var(--t-label)}
+.matrix{
+  width:100%;aspect-ratio:1/1;display:grid;
+  grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  border:var(--key) solid var(--ink);position:relative;
+}
+.q{position:relative;padding:12px}
+.qn{font-family:var(--f-display);text-transform:uppercase;letter-spacing:-0.02em;font-size:20px}
+body.mode-class .qn{font-size:24px}
+.q-anx{background:var(--oxblood);color:var(--bone)}
+.q-lea{background:var(--jade);color:var(--ink)}
+.q-apa{background:var(--slate);color:var(--bone)}
+.q-com{background:var(--ochre);color:var(--ink)}
+.mk{position:absolute;transform:translate(-50%,50%);z-index:4;width:18px;height:18px}
+.mk .dot{width:18px;height:18px;border-radius:50%;background:var(--ink);
+  box-shadow:0 0 0 4px var(--ochre), 7px 7px 0 var(--ink)}
+.mk.ref{width:12px;height:12px}
+.mk.ref .dot{width:12px;height:12px;background:transparent;border:3px solid var(--ink);box-shadow:none}
+.mk .lab{position:absolute;left:26px;top:-3px;white-space:nowrap;font-family:var(--f-mono);font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;font-size:12px;background:var(--bone);color:var(--ink);
+  border:2px solid var(--ink);padding:1px 6px}
+.mk.ref .lab{left:20px}
+.mk.flip .lab{left:auto;right:26px}
+.mk.ref.flip .lab{right:20px}
+.matrix-caption{font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.05em;
+  font-size:var(--t-label);color:var(--slate);margin-top:16px;max-width:54ch;line-height:1.5}
+.matrix-read{flex:1 1 330px;min-width:0}
+
+/* ─────────────────────────────────────────────────────────────
+   SOLO MODE
+   ───────────────────────────────────────────────────────────── */
+#s-solo1{max-width:920px}
+.moment-title{font-size:var(--t-head);margin-bottom:14px}
+.scene{font-size:calc(var(--t-body)*1.06);line-height:1.52}
+.choices{display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.choice{
+  text-align:left;background:var(--bone);color:var(--ink);border:var(--key) solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink);padding:15px 18px;display:flex;gap:14px;align-items:flex-start;
+  font-family:var(--f-body);font-weight:400;text-transform:none;letter-spacing:0;
+  font-size:var(--t-body);line-height:1.42;cursor:pointer;
+}
+.choice:active{box-shadow:2px 2px 0 var(--ink);transform:translate(3px,3px)}
+.choice .num{font-family:var(--f-mono);font-weight:700;font-size:var(--t-body);flex:0 0 auto;color:var(--slate)}
+.progress{display:flex;gap:5px;margin-bottom:22px}
+.pseg{flex:1;height:14px;border:var(--key) solid var(--ink);background:var(--bone)}
+.pseg.done{background:var(--ink)}
+.pseg.now{background:var(--ochre)}
+body.is-ink .pseg{border-color:var(--bone);background:var(--ink)}
+body.is-ink .pseg.done{background:var(--bone)}
+body.is-ink .pseg.now{background:var(--ochre)}
+
+/* pass two — the one inversion in the whole tool */
+#s-solo2{max-width:920px}
+.rin-block{margin-bottom:24px}
+.rin-lab{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  font-size:var(--t-label);color:var(--ochre);margin-bottom:8px}
+.rin-heard{font-size:var(--t-body);line-height:1.46}
+.rin-thought{font-size:calc(var(--t-body)*1.08);line-height:1.52}
+.rin-said{font-size:calc(var(--t-body)*1.08);line-height:1.52;border-left:6px solid var(--ochre);padding-left:16px}
+.rin-said.unsaid{border-left-color:var(--slate)}
+/* The strike is slate as specified; the text itself stays bone. Slate on the ink ground
+   is 3.6:1, and this line is the payload of the whole exercise — it has to be readable. */
+.rin-said.unsaid s{color:var(--bone);text-decoration:line-through;
+  text-decoration-color:var(--slate);text-decoration-thickness:2px}
+.unsaid-tag{display:inline-block;font-family:var(--f-mono);font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;font-size:var(--t-label);color:var(--slate);border:2px solid var(--slate);
+  padding:1px 8px;margin-bottom:10px}
+
+/* results */
+#s-results{max-width:1100px}
+.res-block{margin-bottom:30px}
+.profile{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+@media (max-width:860px){.profile{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:420px){.profile{grid-template-columns:1fr}}
+.pcard{border:var(--key) solid var(--ink);padding:14px}
+.pcard .cnt{font-family:var(--f-mono);font-weight:700;font-size:46px;line-height:1}
+.pcard .nm{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  font-size:13px;margin:8px 0 8px}
+.pcard .fd{font-size:14px;line-height:1.4}
+.pcard.p-support{background:var(--support);color:var(--ink)}
+.pcard.p-consult{background:var(--ultramarine);color:var(--bone)}
+.pcard.p-challenge{background:var(--bone);color:var(--ink);border-top:14px dashed var(--ultramarine)}
+.pcard.p-direct{background:var(--oxblood);color:var(--bone)}
+.ledger{list-style:none;margin:18px 0 0;padding:0}
+.ledger li{border-left:6px solid var(--slate);padding:0 0 0 16px;margin-bottom:18px}
+.ledger li:last-child{margin-bottom:0}
+.ledger .lm{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  font-size:var(--t-label);color:var(--slate);display:block;margin-bottom:5px}
+.seqline{border:var(--key) solid var(--ink);padding:16px 18px;margin-top:18px}
+.seqline .verdict{font-family:var(--f-display);text-transform:uppercase;letter-spacing:-.02em;font-size:28px}
+.devbox{border:var(--key) solid var(--ink);background:var(--ochre);color:var(--ink);padding:16px 18px;margin-top:18px}
+#copyOut{margin-top:20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+#copyMsg{font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.06em;font-size:var(--t-label);color:var(--slate)}
+.footlinks{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+</style>
+</head>
+<body>
+
+<div id="bg" aria-hidden="true"></div>
+
+<main>
+
+<!-- ══════════════════════════ LANDING ══════════════════════════ -->
+<section id="s-landing" class="screen" aria-label="The Sequence — choose a mode">
+  <div class="land-head">
+    <h1><span class="display">The Sequence</span></h1>
+    <div class="land-sub">Climate first. Challenge second.</div>
+  </div>
+
+  <div class="modes">
+    <button class="panel mode-card class-c" data-go="class">
+      <span class="mh">Class mode</span>
+      <span class="tag">Project it. Argue it out. The room leads one team through eight rounds and spends three actions a round.</span>
+      <span class="meta">8 rounds · ~12 min · facilitated</span>
+    </button>
+    <button class="panel mode-card solo-c" data-go="solo">
+      <span class="mh">Solo mode</span>
+      <span class="tag">Play it. Meet Rin. Eight moments as the leader, then the same eight again as the analyst who was in the room.</span>
+      <span class="meta">8 moments · ~12 min · individual</span>
+    </button>
+  </div>
+
+  <hr class="rule">
+  <div class="srcstrip">
+    Source: McKinsey Global Survey, “Psychological safety and the critical role of leadership development”,
+    11 February 2021 · 2×2 matrix after Amy Edmondson
+  </div>
+</section>
+
+<!-- ══════════════════════════ CLASS SETUP ══════════════════════════ -->
+<section id="s-setup" class="screen" aria-labelledby="setup-h">
+  <div class="topbar">
+    <span class="mono mono-b">Class mode · setup</span>
+    <button class="ghost" data-go="landing">← Back</button>
+  </div>
+  <div class="panel" style="max-width:1040px">
+    <h1 id="setup-h" style="font-size:calc(var(--t-display)*.68)">Senior leadership above you</h1>
+    <p style="margin-top:18px;max-width:58ch">Your own leadership does not happen in a vacuum.</p>
+    <div class="setup-opts" role="group" aria-label="Senior leadership setting">
+      <button class="opt o-inclusive" data-senior="inclusive" aria-pressed="false">Inclusive</button>
+      <button class="opt o-neutral"   data-senior="neutral"   aria-pressed="true">Neutral</button>
+      <button class="opt o-directive" data-senior="directive" aria-pressed="false">Directive</button>
+    </div>
+    <div class="commit-row">
+      <button class="primary" id="startRounds">Begin round 1 →</button>
+    </div>
+  </div>
+  <div class="srcstrip">
+    McKinsey, 2021: team leaders are more likely to show supportive, consultative and challenging behaviours
+    when senior leaders model inclusiveness.
+  </div>
+</section>
+
+<!-- ══════════════════════════ CLASS ROUND ══════════════════════════ -->
+<section id="s-round" class="screen" aria-label="Round">
+  <div class="topbar">
+    <span class="mono mono-b" id="rd-count">Round 1 / 8</span>
+    <span class="chip" id="rd-senior">Senior leadership: neutral</span>
+  </div>
+
+  <div class="round-grid">
+    <div class="rd-col">
+      <div class="panel" id="rd-panel">
+        <div class="mono" style="color:var(--slate);margin-bottom:12px">Situation</div>
+        <div class="situation" id="rd-sit"></div>
+        <div class="event-flag" id="rd-event" hidden></div>
+      </div>
+
+      <div class="panel hear-panel" style="margin-top:24px">
+        <div class="hear-label">What you hear</div>
+        <ul class="hear" id="rd-hear"></ul>
+      </div>
+    </div>
+
+    <div class="panel meters-panel" style="margin-top:20px"><!-- asymmetric device — round screen -->
+      <div class="meters" id="rd-meters"></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:24px">
+    <div class="spend-head">
+      <h2 style="font-size:calc(var(--t-head)*.8)">Spend 3 actions</h2>
+      <span class="left-count" id="rd-left">3 left</span>
+    </div>
+    <div class="acts" id="rd-acts"></div>
+    <div class="commit-row">
+      <span class="mono" style="color:var(--slate)">1–4 spend · backspace undo · enter commit · → advance · F fullscreen</span>
+      <button class="primary" id="commitBtn" disabled>Commit the round ⏎</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ CONSEQUENCE ══════════════════════════ -->
+<section id="s-cons" class="screen" aria-label="Consequence">
+  <div class="topbar">
+    <span class="mono mono-b" id="cons-count"></span>
+    <span class="chip" id="cons-senior"></span>
+  </div>
+  <div class="panel cons">
+    <div class="mono" style="color:var(--slate)">What happened</div>
+    <div class="deltas" id="cons-deltas"></div>
+    <div class="cons-line" id="cons-line"></div>
+  </div>
+  <div class="commit-row" style="max-width:960px;margin-left:24px">
+    <button class="primary" id="nextRound">Next round →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════ DEBRIEF ══════════════════════════ -->
+<section id="s-debrief" class="screen" aria-label="Debrief">
+  <div class="topbar">
+    <span class="mono mono-b">Debrief</span>
+    <span class="chip" id="db-senior"></span>
+  </div>
+
+  <!-- Panel 1 -->
+  <div class="panel" id="db1">
+    <h2>The trajectory</h2>
+    <p style="max-width:72ch;margin-top:14px">Eight rounds, three meters. The dashed line is the counterfactual —
+      what this same model produces for the ordered path, support and consult first and challenge later,
+      under your senior-leadership setting.</p>
+    <div id="chartWrap" style="margin-top:20px"><canvas id="chart"></canvas></div>
+    <div class="legend">
+      <span><i class="swatch" style="background:#E9A21B"></i>Climate</span>
+      <span><i class="swatch" style="background:#3FBFA8"></i>Safety</span>
+      <span><i class="swatch" style="background:#141210"></i>Delivery</span>
+      <span><i class="swatch" style="background:repeating-linear-gradient(90deg,#6E675F 0 7px,#F2ECDF 7px 13px)"></i>Counterfactual delivery — ordered path</span>
+    </div>
+    <p class="srcstrip">Climate started at 40. Just 43% of respondents report a positive team climate — the
+      strongest driver of psychological safety, ahead of positive leader relations and work-design
+      characteristics. McKinsey, 2021.</p>
+  </div>
+
+  <!-- Panel 2 -->
+  <div class="panel" id="db2" hidden>
+    <h2>The gate</h2>
+    <p style="max-width:72ch;margin-top:14px">There was a threshold on screen the whole time and you never saw it.
+      Challenge only paid above climate 60. Below it, every point you spent on Challenge took safety out of the team.</p>
+    <div class="gate-wrap">
+      <div class="gate-chart" id="gateChart"></div>
+      <div class="gate-labels" id="gateLabels"></div>
+    </div>
+    <h3 style="margin-top:24px" id="gateHead"></h3>
+    <div class="legend" style="margin-top:14px">
+      <span><i class="swatch" style="background:#3FBFA8"></i>Challenge spent above the line</span>
+      <span><i class="swatch" style="background:#A32B26"></i>Challenge spent below the line</span>
+      <span><i class="swatch" style="background:#E9A21B"></i>No challenge spent</span>
+    </div>
+    <p class="srcstrip">Challenging leadership has no significant effect on psychological safety without a
+      positive team climate already in place. McKinsey, 2021.</p>
+  </div>
+
+  <!-- Panel 3 -->
+  <div class="panel" id="db3" hidden>
+    <h2>The four behaviours, named</h2>
+    <p style="max-width:72ch;margin-top:14px">These were never neutral verbs. Each one is a leadership style the survey measured.</p>
+    <div class="named">
+      <div class="nb n-support">
+        <span class="tag">Support</span>
+        <h3>Supportive leadership</h3>
+        <div class="fnd">Concern for team members’ welfare, building mutual support. It affects psychological
+          safety <b>only indirectly</b> — through team climate. In the model you just ran, Support never touched
+          Safety directly. It moved Climate, and Climate pulled Safety after it.</div>
+        <span class="coef">Indirect effect only · McKinsey, 2021</span>
+      </div>
+      <div class="nb n-consult">
+        <span class="tag">Consult</span>
+        <h3>Consultative leadership</h3>
+        <div class="fnd">Asking opinions before deciding, granting autonomy, seeking consensus. It works
+          <b>both directly and through climate</b> — the only behaviour here that does both, and the only one
+          that appeared in all three of your meters.</div>
+        <span class="coef">Standardised coefficient 0.54 · McKinsey, 2021</span>
+      </div>
+      <div class="nb n-challenge">
+        <span class="tag">Challenge</span>
+        <h3>Challenging leadership</h3>
+        <div class="fnd">Asking people to re-examine assumptions and exceed what they thought possible. It can
+          strengthen psychological safety — but <b>only where a positive climate already exists</b>. Below the
+          line it did damage. The sequence is the finding.</div>
+        <span class="coef">Conditional on positive climate · McKinsey, 2021</span>
+      </div>
+      <div class="nb n-direct">
+        <span class="tag">Direct</span>
+        <h3>Authoritative leadership</h3>
+        <div class="fnd">Command and control. <b>Detrimental</b> to psychological safety. It bought delivery
+          early and less of it each round after that, while taking climate and safety down with it.</div>
+        <span class="coef">Detrimental · McKinsey, 2021</span>
+      </div>
+    </div>
+    <p class="srcstrip">The least-taught skills are among the most predictive: sponsorship — enabling others’
+      success ahead of your own — appears in 26% of leadership development programmes, situational humility in 36%.
+      Organisations investing substantially in leadership development are 64% more likely to have senior leaders
+      rated as inclusive. McKinsey, 2021.</p>
+  </div>
+
+  <!-- Panel 4 -->
+  <div class="panel" id="db4" hidden>
+    <h2>Where you landed</h2>
+    <div class="matrix-holder" style="margin-top:22px">
+      <div class="matrix-outer">
+        <div class="matrix-axes">
+          <div class="axis-y"><span>low</span><span>Challenge</span><span>high</span></div>
+          <div class="matrix" id="classMatrix"></div>
+          <div class="axis-x"><span>low</span><span>Climate</span><span>high</span></div>
+        </div>
+        <div class="matrix-caption">2×2 after Amy Edmondson. Axes measured from your own behaviour, not your team’s.</div>
+      </div>
+      <div class="matrix-read">
+        <h3 id="db4-quad"></h3>
+        <p id="db4-read" style="margin-top:12px"></p>
+        <hr class="rule">
+        <p style="font-size:calc(var(--t-body)*.86)"><b>All support</b> sits in Comfort. It is the safest team on
+          the board and the one that delivers least. Kindness is a floor, not a ceiling — the sequence is climate
+          first and then challenge, not climate instead of challenge.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="debrief-nav">
+    <button class="ghost" id="dbPrev">← Back</button>
+    <button class="primary" id="dbNext">Next panel →</button>
+    <button class="ghost" id="dbRestart">Restart</button>
+    <span class="panel-dots" id="dbDots"></span>
+  </div>
+</section>
+
+<!-- ══════════════════════════ SOLO PASS ONE ══════════════════════════ -->
+<section id="s-solo1" class="screen" aria-label="Solo mode — your choices">
+  <div class="topbar">
+    <span class="mono mono-b" id="m-count">Moment 1 / 8</span>
+    <button class="ghost" data-go="landing">← Back</button>
+  </div>
+  <div class="progress" id="m-prog"></div>
+  <div class="panel" id="m-panel">
+    <h2 class="moment-title" id="m-title"></h2>
+    <p class="scene" id="m-scene"></p>
+    <div class="choices" id="m-choices"></div>
+  </div>
+  <div class="srcstrip">Nothing on this screen is feedback. No score is being shown.</div>
+</section>
+
+<!-- ══════════════════════════ SOLO PASS TWO ══════════════════════════ -->
+<section id="s-solo2" class="screen" aria-label="Solo mode — Rin's replay">
+  <div class="topbar">
+    <span class="mono mono-b" id="r-count" style="color:var(--ochre)">Rin · moment 1 / 8</span>
+  </div>
+  <div class="progress" id="r-prog"></div>
+  <div class="panel" id="r-panel">
+    <h2 class="moment-title" id="r-title"></h2>
+
+    <div class="rin-block">
+      <div class="rin-lab">What she heard</div>
+      <div class="rin-heard" id="r-heard"></div>
+    </div>
+    <div class="rin-block">
+      <div class="rin-lab">What she thought</div>
+      <div class="rin-thought" id="r-thought"></div>
+    </div>
+    <div class="rin-block" style="margin-bottom:0">
+      <div class="rin-lab">What she said</div>
+      <div id="r-saidwrap"></div>
+    </div>
+  </div>
+  <div class="commit-row" style="justify-content:flex-start;margin-left:22px">
+    <button class="primary" id="rNext">Next →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════ SOLO RESULTS ══════════════════════════ -->
+<section id="s-results" class="screen" aria-label="Your result">
+  <div class="topbar">
+    <span class="mono mono-b">Your result</span>
+    <button class="ghost" data-go="landing">← Start again</button>
+  </div>
+
+  <div class="res-block panel">
+    <h2>A · Your profile</h2>
+    <div class="profile" id="res-profile"></div>
+    <p class="srcstrip">Behaviour taxonomy and findings: McKinsey, 2021.</p>
+  </div>
+
+  <div class="res-block panel" style="margin-left:22px"><!-- asymmetric device — results -->
+    <h2>B · Where you land</h2>
+    <div class="matrix-holder" style="margin-top:22px">
+      <div class="matrix-outer">
+        <div class="matrix-axes">
+          <div class="axis-y"><span>low</span><span>Challenge</span><span>high</span></div>
+          <div class="matrix" id="soloMatrix"></div>
+          <div class="axis-x"><span>low</span><span>Climate</span><span>high</span></div>
+        </div>
+        <div class="matrix-caption">2×2 after Amy Edmondson. Axes measured from your own behaviour, not your team’s.</div>
+      </div>
+      <div class="matrix-read">
+        <h3 id="res-quad"></h3>
+        <p class="mono" id="res-coords" style="margin:10px 0 14px;color:var(--slate);line-height:1.6"></p>
+        <p id="res-read"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="res-block panel">
+    <h2>C · What you didn’t hear</h2>
+    <div id="res-ledger" style="margin-top:16px"></div>
+  </div>
+
+  <div class="res-block panel">
+    <h2>D · Sequence and next step</h2>
+    <div class="seqline">
+      <div class="verdict" id="res-seq"></div>
+      <p class="mono" id="res-seq-means" style="color:var(--slate);margin-top:8px"></p>
+      <p style="margin-top:12px" id="res-seq-note"></p>
+    </div>
+    <div class="devbox">
+      <div class="mono mono-b" style="margin-bottom:8px">Development prompt</div>
+      <div id="res-dev"></div>
+    </div>
+    <div id="copyOut">
+      <button class="primary" id="copyBtn">Copy my result</button>
+      <span id="copyMsg"></span>
+    </div>
+  </div>
+
+  <div class="footlinks">
+    <button class="ghost" data-go="solo">Run solo again</button>
+    <button class="ghost" data-go="class">Try class mode</button>
+  </div>
+  <div class="srcstrip">
+    McKinsey Global Survey, “Psychological safety and the critical role of leadership development”,
+    11 February 2021. Fielded 14–29 May 2020; 1,574 respondents, 1,223 analysed. 2×2 matrix after Amy Edmondson.
+  </div>
+</section>
+
+</main>
+
+<script>
+"use strict";
+
+/* ═══════════════════════════════════════════════════════════════
+   §3.4 / §7  THE MODEL
+   One pure function, no DOM access. The counterfactual, the class
+   loop, solo mode and the acceptance traces all call this.
+   ═══════════════════════════════════════════════════════════════ */
+
+var SENIOR = {
+  inclusive: { ceiling: 100, m: 1.15, d: 0.8 },
+  neutral:   { ceiling: 88,  m: 1.00, d: 1.2 },
+  directive: { ceiling: 74,  m: 0.80, d: 2.0 }
+};
+
+function clamp(v, lo, hi){ return Math.min(hi, Math.max(lo, v)); }
+
+/* state  : {C,S,P,round,streak:[nS,nC,nH,nA]}
+   alloc  : [nS,nC,nH,nA]
+   config : {ceiling,m,d, kappaFixed?, noDamping?, noEvents?}          */
+function stepRound(state, alloc, config){
+  var C = state.C, S = state.S, P = state.P, round = state.round;
+  var streak = state.streak || [0,0,0,0];
+  var ceiling = config.ceiling, m = config.m, d = config.d;
+  var nS = alloc[0], nC = alloc[1], nH = alloc[2], nA = alloc[3];
+
+  /* Gate evaluated on the PRE-update climate. Never shown during play. */
+  var G = C >= 60 ? 1 : 0;
+
+  /* Coupling: 0.30 for rounds 1–3, 0.45 from round 4 (distributed-work event). */
+  var kappa = (config.kappaFixed != null) ? config.kappaFixed
+            : (config.noEvents ? 0.30 : (round >= 4 ? 0.45 : 0.30));
+
+  /* Repetition streaks: consecutive rounds at n >= 2, including this one. */
+  var next = [0,0,0,0], i;
+  for (i = 0; i < 4; i++) next[i] = alloc[i] >= 2 ? (streak[i] || 0) + 1 : 0;
+
+  function damp(idx){ return (!config.noDamping && next[idx] >= 3) ? 0.55 : 1; }
+  var rS = damp(0), rC = damp(1), rH = damp(2);
+  /* Direct never softens — it escalates. */
+  var e = (!config.noDamping && next[3] >= 3) ? 1.15 : 1;
+
+  var dC = 4.2*nS*rS + 2.6*nC*rC*m - 6.5*nA*e
+         + (G ? 0.6*nH*rH : -2.6*nH) - d;
+
+  /* Support never moves Safety directly — only through kappa*(C - S). */
+  var dS = 3.1*nC*rC*m + kappa*(C - S) - 7.2*nA*e
+         + (G ? 1.2*nH*rH : -3.2*nH);
+
+  /* Challenge is the only large source of delivery, scaled by Safety.
+     The whole term flips sign below S ≈ 35. Damping applies to gains only. */
+  var chalRaw = 6.4*(S/100) - 3.4*(1 - S/100);
+  var chalTerm = nH * (chalRaw >= 0 ? chalRaw*rH : chalRaw);
+
+  var dP = chalTerm + 0.6*nC*rC + 0.25*nS*rS
+         + nA * Math.max(0.3, 3.0 - 0.7*(round - 1))   /* coercion loses potency */
+         + 0.15*(S - P) - 0.6;
+
+  return {
+    C: clamp(C + dC, 5, ceiling),
+    S: clamp(S + dS, 5, 100),
+    P: clamp(P + dP, 5, 100),
+    round: round + 1,
+    streak: next,
+    deltas: { dC: dC, dS: dS, dP: dP },
+    gate: G,
+    kappa: kappa
+  };
+}
+
+function initState(){ return { C: 40, S: 35, P: 50, round: 1, streak: [0,0,0,0] }; }
+
+function runPath(allocFor, seniorKey, extra){
+  var base = SENIOR[seniorKey || "neutral"];
+  var cfg = { ceiling: base.ceiling, m: base.m, d: base.d };
+  if (extra) for (var k in extra) cfg[k] = extra[k];
+  var s = initState(), trace = [], r, a;
+  for (r = 1; r <= 8; r++){
+    a = allocFor(r);
+    s = stepRound(s, a, cfg);
+    trace.push({ round:r, alloc:a.slice(), C:s.C, S:s.S, P:s.P,
+                 dC:s.deltas.dC, dS:s.deltas.dS, dP:s.deltas.dP, gate:s.gate });
+  }
+  return { end: { C:s.C, S:s.S, P:s.P }, trace: trace };
+}
+
+/* §3.8 canonical paths — [nS, nC, nH, nA] */
+var CANON = {
+  "Ordered":         function(r){ return r <= 4 ? [2,1,0,0] : [0,1,2,0]; },
+  "Comfort":         function(r){ return [3,0,0,0]; },
+  "Challenge-first": function(r){ return r <= 4 ? [0,1,2,0] : [2,1,0,0]; },
+  "Command":         function(r){ return [0,0,0,3]; }
+};
+
+/* ?trace=1 — acceptance-test traces printed to console as tables */
+function printTraces(){
+  var rows = [], results = {};
+  Object.keys(CANON).forEach(function(name){
+    var res = runPath(CANON[name], "neutral");
+    results[name] = res;
+    console.groupCollapsed("%c" + name, "font-weight:700");
+    console.table(res.trace.map(function(t){
+      return { round:t.round, alloc:t.alloc.join(""), gate:t.gate,
+               C:+t.C.toFixed(1), S:+t.S.toFixed(1), P:+t.P.toFixed(1),
+               dC:+t.dC.toFixed(1), dS:+t.dS.toFixed(1), dP:+t.dP.toFixed(1) };
+    }));
+    console.groupEnd();
+    rows.push({ path:name, C:+res.end.C.toFixed(1), S:+res.end.S.toFixed(1), P:+res.end.P.toFixed(1) });
+  });
+  console.log("%cEND STATES — senior leadership: neutral", "font-weight:700");
+  console.table(rows);
+
+  var O = results["Ordered"].end, Cf = results["Comfort"].end,
+      Ch = results["Challenge-first"].end, Cm = results["Command"].end;
+  var cmdP = results["Command"].trace.map(function(t){ return t.P; });
+  var peak23 = Math.max(cmdP[1], cmdP[2]);
+  console.log("%cHARD REQUIREMENTS §3.8", "font-weight:700");
+  console.table([
+    { requirement:"1  P(Ordered) > P(Comfort) > P(Challenge-first) > P(Command)",
+      pass: O.P > Cf.P && Cf.P > Ch.P && Ch.P > Cm.P,
+      detail: [O.P, Cf.P, Ch.P, Cm.P].map(function(v){ return v.toFixed(1); }).join("  >  ") },
+    { requirement:"2  S(Comfort) >= 75 and P(Comfort) <= 62",
+      pass: Cf.S >= 75 && Cf.P <= 62,
+      detail: "S=" + Cf.S.toFixed(1) + "  P=" + Cf.P.toFixed(1) },
+    { requirement:"3  P(Command) peaks in rounds 2-3 above 55, ends below 30",
+      pass: peak23 > 55 && peak23 === Math.max.apply(null, cmdP) && Cm.P < 30,
+      detail: "peak(R2,R3)=" + peak23.toFixed(1) + "  end=" + Cm.P.toFixed(1) },
+    { requirement:"4  S(Challenge-first) < S(Ordered) - 25",
+      pass: Ch.S < O.S - 25,
+      detail: Ch.S.toFixed(1) + " < " + (O.S - 25).toFixed(1) }
+  ]);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTENT — CLASS MODE
+   ═══════════════════════════════════════════════════════════════ */
+
+var BEHAVIOURS = [
+  { label:"Support",   desc:"Show you care about them as people, not just as output.",     cls:"b-support"   },
+  { label:"Consult",   desc:"Ask before you decide. Give away the decision where you can.", cls:"b-consult"   },
+  { label:"Challenge", desc:"Ask them to re-examine what they think is possible.",          cls:"b-challenge" },
+  { label:"Direct",    desc:"Decide, instruct, and expect it done.",                        cls:"b-direct"    }
+];
+
+var ROUNDS = [
+  { n:1, sit:"Six of you, drawn from three functions, in a room for the first time. The first real deadline is six weeks out, and two people here have never worked with anyone else at the table." },
+  { n:2, sit:"The call is nearly over. Rin waits until the agenda is finished, then says quietly that the delivery plan assumes something about the EU entities that may not hold." },
+  { n:3, sit:"The client has moved the date forward by two weeks. Nothing has been taken out of the scope to pay for it." },
+  { n:4, sit:"The office closes for the quarter and the team goes fully distributed. Every conversation that used to happen sideways now has to be scheduled.",
+         event:"Distance makes climate matter more." },
+  { n:5, sit:"Work went out with an error in it and the client found it before you did. Someone is going to have to own it in front of everyone." },
+  { n:6, sit:"A senior stakeholder wants the team to take on a stretch objective none of them has attempted. The upside is real and so is the exposure." },
+  { n:7, sit:"Two of the team are disagreeing in the open about the approach, and both of them are half right. The room has gone still and neither is backing down." },
+  { n:8, sit:"Final review. The client has asked the team to present its own assessment of the work, including the parts that fell short." }
+];
+
+/* Four dialogue variants per round, selected by safety band. Never generated. */
+var DIALOGUE = [
+  { low:[["Tomas","Whatever split you think works."],["Dee","Sounds good to me."],["Marcus","I will pick it up from the notes."]],
+    mid:[["Rin","Sorry, is the sequencing already decided, or is it still open."],["Tomas","I can take the first workstream. I think. If nobody else wants it."],["Marcus","Easier if I cover the client side, the data side, and chair. Less to coordinate."]],
+    open:[["Rin","What happens if the entity data arrives late. Do we have a fallback."],["Dee","I do not agree with starting on the model. I think we start on the definitions."],["Tomas","Six weeks is thin. I would rather say that now than in week four."]],
+    high:[["Dee","I think your sequencing is wrong and I want to argue it before we start."],["Rin","I have not done scoping at this size. I would like the hard one so I learn it."],["Marcus","I got the last one of these badly wrong. Worth me saying how, before we repeat it."]] },
+
+  { low:[["Rin","Probably nothing."],["Tomas","If it has already been checked, then fine."],["Dee","No concerns from me."]],
+    mid:[["Rin","Sorry to raise it this late. It might be nothing."],["Marcus","I will look at it tonight and confirm either way."],["Tomas","I assumed someone had checked it. I did not want to ask."]],
+    open:[["Rin","Page four does not hold for the EU entities. I checked it twice."],["Dee","That is three weeks of work. We should say that out loud."],["Tomas","I disagree that it is small. It moves the whole schedule."]],
+    high:[["Rin","I think the assumption is wrong and I can show it in ten minutes."],["Marcus","I signed that page off. That one is mine."],["Dee","I will take the rework. It is the ugly part and I know the data."]] },
+
+  { low:[["Dee","We will find the hours somewhere."],["Marcus","Fine by me."],["Tomas","If that is the date, that is the date."]],
+    mid:[["Tomas","I want to say this is tight, and then I will get on with it."],["Rin","Is it worth asking what we could drop, or is that not on the table."],["Marcus","I will rebuild the plan tonight and send it round. Easier than a discussion."]],
+    open:[["Tomas","Two weeks is not a squeeze, it is a different piece of work. We should tell them that."],["Dee","I would rather cut the benchmark section than do all of it badly."],["Rin","The risk is the EU data landing in week five. That is the thing that breaks us."]],
+    high:[["Dee","I think you are about to agree to this, and I want to push back before you do."],["Tomas","I overcommitted on the last one and it cost us. I would rather not repeat it."],["Rin","If we are cutting, give me the benchmark rebuild. I will own the call with the client."]] },
+
+  { low:[["Marcus","The calls are fine."],["Dee","No concerns from me."],[null,"Six people are on the call. Two have spoken."]],
+    mid:[["Rin","Sorry, was that a question for me, or for the group."],["Marcus","I will run through everything and you can stop me."],["Tomas","I had something on the sequencing but it can wait."]],
+    open:[["Dee","The calls are too long and we are not saying anything in them. Can we change the format."],["Rin","I disagree with moving it all to writing. I think we lose the disagreements."],["Tomas","What worries me is that we have stopped hearing from Dee's side entirely."]],
+    high:[["Rin","Can I run next week's call. I would chair it differently and I would like to try."],["Marcus","I have been coasting on these calls. That is mine and I am fixing it."],["Dee","I want to disagree with you in front of everyone rather than message you afterwards."]] },
+
+  { low:[["Dee","It will not happen again."],["Tomas","Happy either way."],[null,"Nobody asks how it happened."]],
+    mid:[["Dee","That was mine. Sorry. I do not know what else to say."],["Marcus","I will add a check. It is fine, we move on."],["Rin","Is it worth looking at the handover step, or is that unhelpful right now."]],
+    open:[["Dee","It was my error and it went through two other people. Both things are true."],["Rin","The check we skipped is the one nobody owns. That is the thing to fix."],["Tomas","I do not think a new checklist fixes this. I think the timeline does."]],
+    high:[["Dee","Here is exactly what I did, where it broke, and what I would change. Ask me anything."],["Marcus","I reviewed it and I did not read it properly. That is mine too."],["Rin","I will take the process rewrite. I would rather own it than watch it."]] },
+
+  { low:[["Marcus","We can probably do it."],["Dee","Whatever works."],["Tomas","If they have asked, we say yes."]],
+    mid:[["Marcus","We can probably do it. I think."],["Rin","Sorry, do we know what good looks like here, or do we work that out."],["Tomas","I will say yes and worry about it after."]],
+    open:[["Tomas","None of us has done this. I would like that written down somewhere before we agree."],["Dee","I think we take it, and I think we tell them what we are dropping to do it."],["Rin","The part that worries me is the modelling. I would want cover on that."]],
+    high:[["Rin","I am the weakest link on the modelling and I want that said now, not in week six."],["Dee","I will take the part I am worst at, if someone will review me on it."],["Marcus","I said we can probably do it last time and I was wrong. Let me be more precise."]] },
+
+  { low:[[null,"Rin stops mid-sentence. Marcus finishes his point."],["Dee","Happy with whatever you decide."],["Tomas","No concerns from me."]],
+    mid:[["Rin","Sorry, I will leave it. It is not worth the time."],["Marcus","I will defer if you want to move on."],["Tomas","I can see both. I do not have a view."]],
+    open:[["Rin","I think Marcus is right about the risk and wrong about the sequence."],["Marcus","Say the sequencing part again. I think I have been arguing past it."],["Dee","We have been on this ten minutes and I think that is fine, actually."]],
+    high:[["Marcus","Give me two minutes to argue Rin's side. I want to see whether it holds."],["Rin","I have changed my mind halfway through this. I will say so rather than finish the point."],["Tomas","The disagreement is the useful part. Do not close it early."]] },
+
+  { low:[["Marcus","Whatever you want to put in it."],["Dee","Fine by me."],["Tomas","You should present. You know what they want to hear."]],
+    mid:[["Rin","How honest are we being. I do not want to get it wrong."],["Marcus","I will draft it and you can cut whatever is too much."],["Dee","I would rather not be the one who says the hard part."]],
+    open:[["Dee","We should put the delay in. They already know about it."],["Tomas","I disagree with softening it. It reads worse when they find it themselves."],["Rin","The thing we got wrong was week two. I will write that section."]],
+    high:[["Rin","I will present it, including the part where I was wrong, and I would like you not to edit it."],["Dee","The harshest fair version is better than the tidy one. Let us take that in."],["Marcus","I want to name the thing we still have not fixed, in the room, on the record."]] }
+];
+
+/* One sentence of consequence, in the team's voice. Never explains the model. */
+var CONSEQUENCE = [
+  { pos:"The session runs ten minutes over and nobody leaves early.",
+    neu:"The agenda gets covered. Two people say nothing at all.",
+    neg:"The meeting ends four minutes early. Everyone thanks you." },
+  { pos:"Rin sends the working file at seven the next morning, unasked.",
+    neu:"The assumption gets fixed. Rin does not raise the next one until asked twice.",
+    neg:"The correction appears in Thursday's deck. Nobody mentions where it came from." },
+  { pos:"Tomas rewrites the plan overnight and marks the two things he still thinks will slip.",
+    neu:"The plan is accepted. The benchmark section quietly stops being discussed.",
+    neg:"Everyone agrees to the date. Nobody says what will be dropped to make it." },
+  { pos:"Thursday's call runs short because people actually said things in it.",
+    neu:"Calls end on time. The side conversations move to direct messages.",
+    neg:"The calls are efficient. Three people have not spoken in two weeks." },
+  { pos:"Dee sends round the failure note the same evening. Two other people add to it.",
+    neu:"The fix goes in. The handover step stays exactly as it was.",
+    neg:"Nobody mentions the error again. The next one takes longer to surface." },
+  { pos:"Marcus revises his estimate down and says why.",
+    neu:"The team takes it on. Nobody says which part frightens them.",
+    neg:"The stretch objective is accepted in the room and privately dreaded outside it." },
+  { pos:"The argument ends with both of them changing something.",
+    neu:"A decision is made. Rin does not raise it again.",
+    neg:"The meeting moves on. The disagreement continues in a smaller group." },
+  { pos:"The team presents its own worst version and the client asks to keep the document.",
+    neu:"The assessment is accurate and careful. Nothing in it is new to anyone.",
+    neg:"The review goes smoothly. The client learns nothing they did not already know." }
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTENT — SOLO MODE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* §4.3 style weights.
+   climateW / challengeW are used only for the Block B axes and are exactly as specified.
+   `alloc` drives the hidden running climate. DEVIATION FROM SPEC: the spec calls for a
+   one-point version of the class model. At one point per moment the fastest possible path
+   reaches climate 52 by moment 4 and 64 by moment 8 — so Rin's threshold (start 62) is
+   crossed only at the final moment and the climate-60 gate never opens in time. Both her
+   voice model and the sequence effect the tool exists to teach are inert at that scale.
+   Two points per moment restores them: climate-first crosses the gate at moment 4, and
+   challenge-first never crosses it at all. Every other parameter in §4.3 is unchanged. */
+var STYLE = {
+  support:   { climateW: 1.0,  challengeW: 0.0,  alloc:[2,0,0,0] },
+  consult:   { climateW: 0.85, challengeW: 0.35, alloc:[0,2,0,0] },
+  challenge: { climateW: 0.15, challengeW: 1.0,  alloc:[0,0,2,0] },
+  direct:    { climateW:-0.9,  challengeW: 0.45, alloc:[0,0,0,2] }
+};
+
+var MOMENTS = [
+  {
+    title:"Moment 1 — Week one",
+    scene:"The team is four people you inherited and two you hired. Your first working session is tomorrow. You have a plan you’re fairly confident in and forty minutes of agenda for a sixty-minute meeting.",
+    choices:[
+      { s:"consult",   t:"Bring the plan as a draft and spend the last twenty minutes asking where it’s wrong." },
+      { s:"direct",    t:"Present the plan, assign owners, and use the remaining time to unblock people." },
+      { s:"support",   t:"Cut the plan to twenty minutes and spend the rest on how each person likes to work." },
+      { s:"challenge", t:"Present the plan and ask each person what they’d need to deliver it two weeks early." }
+    ],
+    heard:{
+      consult:"You brought the plan as a draft, then spent the last twenty minutes asking where it was wrong.",
+      direct:"You presented the plan, named owners, and used the rest of the hour to unblock people.",
+      support:"You cut the plan to twenty minutes and spent the rest asking how each person likes to work.",
+      challenge:"You presented the plan and asked each person what they’d need to deliver it two weeks early."
+    },
+    said:"Two of us have run this exact scoping before, on the platform team. Worth using that before we start.",
+    withheld:"The two people you inherited have run this exact scoping twice before, on the platform team. Nobody asked what anyone had done before."
+  },
+  {
+    title:"Moment 2 — The quiet flag",
+    scene:"Rin, who joined six weeks ago, sends you a message after the call: “Probably nothing, but the assumption on page 4 might not hold for the EU entities.” She’s right. You’d built three weeks of work on that assumption.",
+    choices:[
+      { s:"support",   t:"Reply thanking her, and tell her privately that catching that took nerve." },
+      { s:"consult",   t:"Take it to the whole team, credit Rin by name, and ask them how to rework it." },
+      { s:"direct",    t:"Fix the model tonight and tell the team the revised numbers in the morning." },
+      { s:"challenge", t:"Ask Rin to own the rework and present the corrected approach herself." }
+    ],
+    heard:{
+      support:"You replied to her message, and told her privately that catching it took nerve.",
+      consult:"You put it to the whole team, said her name, and asked them how to rework it.",
+      direct:"You fixed the model overnight and gave the team revised numbers in the morning.",
+      challenge:"You gave her the rework and asked her to present the corrected approach herself."
+    },
+    said:"The same assumption sits under the week-five reconciliation. It is one problem in two places.",
+    withheld:"The same assumption also sits under the week-five reconciliation step — one problem in two places, and only one of them got fixed."
+  },
+  {
+    title:"Moment 3 — The deadline moves",
+    scene:"The client pulls the date forward by two weeks. The team hears about it in the same email you do. Tomas replies to all within ninety seconds: “That’s not possible.”",
+    choices:[
+      { s:"direct",    t:"Reply to all with a revised plan and the three things you’re cutting." },
+      { s:"consult",   t:"Put an hour in the diary and ask the team what to cut before you decide." },
+      { s:"challenge", t:"Ask the team what would have to be true for it to be possible." },
+      { s:"support",   t:"Call Tomas first, then everyone individually, before touching the plan." }
+    ],
+    heard:{
+      direct:"You replied to all with a revised plan and the three things you were cutting.",
+      consult:"You put an hour in the diary and asked the team what to cut before you decided.",
+      challenge:"You asked the team what would have to be true for it to be possible.",
+      support:"You called Tomas, then everyone else individually, before touching the plan."
+    },
+    said:"Their procurement lead told me in March that the date was soft. I would expect it to move again.",
+    withheld:"The client’s procurement lead told her in March that the date was soft and would probably move again — a relationship nobody knew she had."
+  },
+  {
+    title:"Moment 4 — The room goes quiet",
+    scene:"The office closes; everyone is remote for the quarter. Three weeks in, your calls run to time, the work lands, and almost nobody speaks who isn’t asked a direct question.",
+    choices:[
+      { s:"support",   t:"Start every call with fifteen minutes that has nothing to do with the work." },
+      { s:"consult",   t:"Ask the team to redesign how the calls run and hand them the format." },
+      { s:"direct",    t:"Cut the calls to twenty minutes and move everything else to writing." },
+      { s:"challenge", t:"Rotate who runs the call each week, starting next week." }
+    ],
+    heard:{
+      support:"You started every call with fifteen minutes that had nothing to do with the work.",
+      consult:"You asked the team to redesign the calls, and used the format they gave you.",
+      direct:"You cut the calls to twenty minutes and moved the rest to writing.",
+      challenge:"You put a different person in charge of the call each week, starting the next one."
+    },
+    said:"The people who have gone quiet are the ones whose work is not on the agenda that week. It is the agenda, not the format.",
+    withheld:"The three people who stopped speaking are exactly the ones whose own work isn’t on that week’s agenda. It is the agenda, not the format."
+  },
+  {
+    title:"Moment 5 — The error ships",
+    scene:"A deliverable goes out with a mistake the client spots. It’s Dee’s work, but it passed through you. The team is on the call in eleven minutes.",
+    choices:[
+      { s:"support",   t:"Message Dee first to say you’ve got it, then open the call yourself." },
+      { s:"direct",    t:"Open the call with the correction, the fix and the new check, and move on." },
+      { s:"consult",   t:"Open by asking the team what in the process let it through." },
+      { s:"challenge", t:"Ask Dee to walk the team through what happened and what she’d change." }
+    ],
+    heard:{
+      support:"You told Dee you’d handle it, then opened the call yourself.",
+      direct:"You opened with the correction, the fix and the new check, and moved on.",
+      consult:"You opened by asking the team what in the process let it through.",
+      challenge:"You asked Dee to walk the team through what happened and what she’d change."
+    },
+    said:"I did the same thing in week two and caught it by luck. The check that saved me is not in the process.",
+    withheld:"She made the same error herself in week two and caught it privately. The check that saved her exists nowhere in the process."
+  },
+  {
+    title:"Moment 6 — The stretch",
+    scene:"A senior stakeholder wants the team to take on something none of them has done. It’s a genuine opportunity and a genuine risk. Marcus says, without much conviction, “We can probably do it.”",
+    choices:[
+      { s:"challenge", t:"Take it, and ask each person to name the part they’re least equipped for." },
+      { s:"consult",   t:"Ask the team to decide, and tell them you’ll back either answer upward." },
+      { s:"support",   t:"Take it, and tell them plainly that you’ll carry it if it goes wrong." },
+      { s:"direct",    t:"Take it and staff it yourself, with the two people you’re confident in." }
+    ],
+    heard:{
+      challenge:"You took it, and asked each person to name the part they were least equipped for.",
+      consult:"You asked the team to decide, and said you’d back either answer upward.",
+      support:"You took it, and said you’d carry it if it went wrong.",
+      direct:"You took it and staffed it yourself, with two people."
+    },
+    said:"I worked with a vendor who has built this exact thing. I can get us an introduction this week.",
+    withheld:"There is a vendor who has already built this. She worked with them at her last firm and could have had an introduction inside a week."
+  },
+  {
+    title:"Moment 7 — Two people, both half right",
+    scene:"Rin and Marcus disagree in front of everyone about the approach. Both arguments hold. The disagreement has been running for ten minutes and the temperature is rising.",
+    choices:[
+      { s:"direct",    t:"Make the call, explain your reasoning, and move the meeting on." },
+      { s:"consult",   t:"Ask the rest of the team which risk they’d rather carry." },
+      { s:"support",   t:"Name that the disagreement is a good sign and slow the conversation down." },
+      { s:"challenge", t:"Ask each of them to argue the other’s position for two minutes." }
+    ],
+    heard:{
+      direct:"You made the call, explained your reasoning, and moved the meeting on.",
+      consult:"You asked the rest of the team which risk they’d rather carry.",
+      support:"You said the disagreement was a good sign and slowed the conversation down.",
+      challenge:"You asked each of them to argue the other’s position for two minutes."
+    },
+    said:"You are both assuming the same dependency holds. If it does not, neither approach works.",
+    withheld:"Both approaches fail on the same dependency — which is not the thing either of them was arguing about."
+  },
+  {
+    title:"Moment 8 — The self-assessment",
+    scene:"The client asks the team to present its own view of the work, including what fell short. You’ll be in the room. Whoever speaks, speaks for all of you.",
+    choices:[
+      { s:"challenge", t:"Ask the team to write the harshest fair version, and take it in unedited." },
+      { s:"consult",   t:"Draft it together and let the team decide how candid to be." },
+      { s:"direct",    t:"Write it yourself, keep it tight, and protect the team from overexposure." },
+      { s:"support",   t:"Ask who wants to present, and back whoever volunteers." }
+    ],
+    heard:{
+      challenge:"You asked for the harshest fair version and took it in unedited.",
+      consult:"You drafted it together and let the team decide how candid to be.",
+      direct:"You wrote it yourself and kept it tight.",
+      support:"You asked who wanted to present, and backed the person who volunteered."
+    },
+    said:"The part that fell short was week two, and the client's own team caused half of it. I have the emails.",
+    withheld:"The part that actually fell short was week two — and the client’s own team caused half of it. She has the email trail."
+  }
+];
+
+/* §4.4 — 24 monologue blocks, three climate bands per moment */
+var MONOLOGUE = [
+  { low:"I have the same slide from two years ago, at a different firm, where this went badly. I had worked out how to say it on the way in. Forty minutes of agenda and I never found the gap.",
+    mid:"There is a version of this I have watched fail, and I know why it failed. I keep waiting for the moment where saying so would land as useful rather than as a correction. It does not quite arrive.",
+    high:"This is the part I actually know something about, and the room can clearly take it. I do not need a run-up. I say it while it is still early enough to change anything." },
+
+  { low:"I wrote “probably nothing” because that is the sentence that lets everybody off, including me. It was not nothing. I have been sitting on the second half of it since Tuesday.",
+    mid:"It got fixed, which is what I wanted. I notice I only said the part I could defend on my own, and left out the part where I would have needed someone to check it with me.",
+    high:"I flagged it and it went somewhere. That is the whole thing — not the credit, the fact that it moved. So I bring the second one as well, before anybody asks." },
+
+  { low:"I know something about this date that nobody else in this conversation knows. It would take one sentence. I have watched what happens here to the person who makes the plan more complicated.",
+    mid:"I nearly said it. There is a difference between being allowed to speak and it being worth the friction, and three months in I still cannot tell which side of that line this sits on.",
+    high:"This is exactly the sort of thing I have and nobody else does. It is useful, so I say it, and I do not spend two minutes dressing it up first." },
+
+  { low:"The calls are quiet and everyone has decided that quiet means working. I have stopped preparing anything I am not directly asked for. That happened over about three weeks and I did not notice it happening.",
+    mid:"I have a fairly specific read on why the room went quiet, and it is not the format. I offer the safe half of it and wait to see what happens to that before I offer the rest.",
+    high:"Somebody had to say the thing about who is actually disappearing from these calls, and why. It is not a comfortable sentence. It is also not a risky one here, which is the difference." },
+
+  { low:"I made the same mistake in week two. I caught it myself and never told anyone, and now I am watching Dee take this on her own. Saying it now would look like I had been hiding it, which I had.",
+    mid:"I could say that I nearly did the same thing. It would take some of the weight off Dee. I run the sentence twice in my head and it comes out sounding like I am making it about me, so I leave it.",
+    high:"I did this in week two and caught it by luck, not by process. Dee should not be standing there alone for something the process lets through. I say it before the call closes." },
+
+  { low:"I know the people who have already built this. I could have an introduction by Friday. Nobody in this room has asked what any of us did before we got here, so I keep it.",
+    mid:"I have a route through this that is cheaper than the one being described. I say I might know someone, which is not the same as saying it, and the conversation moves on without me.",
+    high:"There is a faster way in and I have the relationship. There is no reason not to put it on the table now, while it can still change how this gets staffed." },
+
+  { low:"They are both wrong about the same thing, and neither can see it because they are arguing one layer above it. I am not walking into the middle of that to explain it to them.",
+    mid:"I can see the dependency sitting underneath both arguments. I try to get into it twice, and both times the room is louder than the point, and the second time I let it go.",
+    high:"The argument itself is fine, it is just aimed at the wrong level. I say so, and the useful part is that neither of them hears it as me taking a side." },
+
+  { low:"The section that actually went wrong was week two, and half of it was not us. I have the emails. This is not a room where that gets read as anything except an excuse.",
+    mid:"I would write the week-two section differently and I have the evidence to back it. I offer to draft it, and then I do not push when somebody else picks it up.",
+    high:"I know which part fell short and I know what caused it, including the half that was not ours. Putting it in makes the document better and makes me more exposed. That trade is fine here." }
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   BACKGROUND GEOMETRY — §6.3
+   Quarter-arcs, circles, triangles and one squiggle. Ink or ochre.
+   No more than five per screen, fixed position, varied per screen,
+   always behind panels and never behind body text.
+   ═══════════════════════════════════════════════════════════════ */
+var INK = "#141210", OCH = "#E9A21B", SLT = "#6E675F";
+var GEO = {
+  landing:[
+    ["right:-80px;top:40px;width:300px;height:300px", 300, '<circle cx="150" cy="150" r="140" fill="none" stroke="'+INK+'" stroke-width="3"/>'],
+    ["left:-90px;bottom:-60px;width:320px;height:320px", 320, '<path d="M 18 302 A 284 284 0 0 1 302 18" fill="none" stroke="'+OCH+'" stroke-width="26"/>'],
+    ["right:7%;bottom:9%;width:230px;height:90px", 0, '<svg viewBox="0 0 230 90"><path d="M 8 46 q 27 -34 54 0 q 27 34 54 0 q 27 -34 54 0" fill="none" stroke="'+INK+'" stroke-width="3"/></svg>'],
+    ["left:8%;bottom:13%;width:88px;height:88px", 88, '<rect x="2" y="2" width="84" height="84" fill="'+OCH+'"/>']
+  ],
+  setup:[
+    ["right:9%;top:70px;width:190px;height:170px", 0, '<svg viewBox="0 0 190 170"><polygon points="95,8 184,162 6,162" fill="none" stroke="'+INK+'" stroke-width="3"/></svg>'],
+    ["left:-70px;top:48%;width:190px;height:190px", 190, '<circle cx="95" cy="95" r="88" fill="'+OCH+'"/>'],
+    ["right:-50px;bottom:-50px;width:250px;height:250px", 250, '<path d="M 12 238 A 226 226 0 0 1 238 12" fill="none" stroke="'+INK+'" stroke-width="3"/>']
+  ],
+  round:[
+    ["right:-110px;bottom:-110px;width:350px;height:350px", 350, '<circle cx="175" cy="175" r="165" fill="none" stroke="'+INK+'" stroke-width="3"/>'],
+    ["left:-80px;top:-80px;width:270px;height:270px", 270, '<path d="M 14 256 A 242 242 0 0 1 256 14" fill="none" stroke="'+OCH+'" stroke-width="24"/>']
+  ],
+  cons:[
+    ["right:11%;top:15%;width:145px;height:145px", 145, '<circle cx="72" cy="72" r="68" fill="'+OCH+'"/>'],
+    ["left:5%;bottom:9%;width:160px;height:140px", 0, '<svg viewBox="0 0 160 140"><polygon points="80,6 154,134 6,134" fill="none" stroke="'+INK+'" stroke-width="3"/></svg>'],
+    ["left:4%;top:7%;width:210px;height:80px", 0, '<svg viewBox="0 0 210 80"><path d="M 8 40 q 25 -30 50 0 q 25 30 50 0 q 25 -30 50 0" fill="none" stroke="'+INK+'" stroke-width="3"/></svg>']
+  ],
+  debrief:[
+    ["left:-90px;top:-70px;width:230px;height:230px", 230, '<circle cx="115" cy="115" r="105" fill="none" stroke="'+INK+'" stroke-width="3"/>'],
+    ["right:-60px;bottom:12%;width:230px;height:230px", 230, '<path d="M 12 218 A 206 206 0 0 1 218 12" fill="none" stroke="'+OCH+'" stroke-width="22"/>']
+  ],
+  solo1:[
+    ["right:-50px;top:40px;width:210px;height:210px", 210, '<path d="M 10 200 A 190 190 0 0 1 200 10" fill="none" stroke="'+OCH+'" stroke-width="22"/>'],
+    ["left:4%;bottom:11%;width:150px;height:130px", 0, '<svg viewBox="0 0 150 130"><polygon points="75,6 144,124 6,124" fill="none" stroke="'+INK+'" stroke-width="3"/></svg>'],
+    ["right:7%;bottom:13%;width:165px;height:165px", 165, '<circle cx="82" cy="82" r="76" fill="none" stroke="'+INK+'" stroke-width="3"/>']
+  ],
+  solo2:[
+    ["left:-70px;top:60px;width:240px;height:240px", 240, '<circle cx="120" cy="120" r="112" fill="none" stroke="'+OCH+'" stroke-width="3"/>'],
+    ["right:-60px;bottom:-40px;width:240px;height:240px", 240, '<path d="M 12 228 A 216 216 0 0 1 228 12" fill="none" stroke="'+SLT+'" stroke-width="22"/>']
+  ],
+  results:[
+    ["right:6%;top:50px;width:120px;height:120px", 120, '<rect x="3" y="3" width="114" height="114" fill="none" stroke="'+INK+'" stroke-width="3"/>'],
+    ["left:-60px;top:50%;width:170px;height:170px", 170, '<circle cx="85" cy="85" r="78" fill="'+OCH+'"/>'],
+    ["left:38%;bottom:4%;width:240px;height:86px", 0, '<svg viewBox="0 0 240 86"><path d="M 8 44 q 28 -34 56 0 q 28 34 56 0 q 28 -34 56 0" fill="none" stroke="'+INK+'" stroke-width="3"/></svg>']
+  ]
+};
+function paintGeo(key){
+  var list = GEO[key] || [];
+  document.getElementById("bg").innerHTML = list.map(function(g){
+    if (g[1] === 0) return g[2].replace("<svg ", '<svg style="' + g[0] + '" ');
+    return '<svg style="' + g[0] + '" viewBox="0 0 ' + g[1] + " " + g[1] + '">' + g[2] + "</svg>";
+  }).join("");
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCREEN PLUMBING
+   ═══════════════════════════════════════════════════════════════ */
+var SCREENS = ["s-landing","s-setup","s-round","s-cons","s-debrief","s-solo1","s-solo2","s-results"];
+var GEOKEY  = { "s-landing":"landing","s-setup":"setup","s-round":"round","s-cons":"cons",
+                "s-debrief":"debrief","s-solo1":"solo1","s-solo2":"solo2","s-results":"results" };
+var current = "s-landing";
+
+function $(id){ return document.getElementById(id); }
+function esc(s){
+  return String(s).replace(/[&<>"]/g, function(c){
+    return ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" })[c];
+  });
+}
+function show(id, slideEl){
+  SCREENS.forEach(function(s){ $(s).classList.toggle("on", s === id); });
+  current = id;
+  document.body.classList.toggle("mode-class",
+    id === "s-setup" || id === "s-round" || id === "s-cons" || id === "s-debrief");
+  document.body.classList.toggle("is-ink", id === "s-solo2");
+  paintGeo(GEOKEY[id]);
+  if (slideEl){ slideEl.classList.remove("slide"); void slideEl.offsetWidth; slideEl.classList.add("slide"); }
+  window.scrollTo(0, 0);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CLASS MODE
+   ═══════════════════════════════════════════════════════════════ */
+var cls;
+function classReset(){
+  cls = { senior:"neutral", state:initState(), alloc:[0,0,0,0], order:[],
+          history:[], roundIndex:0, dbPanel:0 };
+}
+classReset();
+
+function seniorChip(el){
+  el.textContent = "Senior leadership: " + cls.senior;
+  el.className = "chip " + (cls.senior === "inclusive" ? "inclusive" : cls.senior === "directive" ? "directive" : "");
+}
+
+function meterHTML(name, val, kind){
+  var filled = Math.round(val / 10), segs = "", i;
+  for (i = 0; i < 10; i++) segs += '<div class="seg' + (i < filled ? " f-" + kind : "") + '"></div>';
+  return '<div class="meter-row"><div class="meter-name">' + name + '</div>' +
+         '<div class="meter" role="img" aria-label="' + name + " " + Math.round(val) + ' out of 100">' + segs + '</div>' +
+         '<div class="meter-val">' + Math.round(val) + '</div></div>';
+}
+
+function bandFor(S){ return S < 30 ? "low" : S < 55 ? "mid" : S < 75 ? "open" : "high"; }
+
+function renderRound(){
+  var r = ROUNDS[cls.roundIndex], st = cls.state;
+  $("rd-count").textContent = "Round " + r.n + " / 8";
+  seniorChip($("rd-senior"));
+  $("rd-sit").textContent = r.sit;
+
+  var ev = $("rd-event");
+  if (r.event){ ev.hidden = false; ev.textContent = r.event; } else { ev.hidden = true; }
+
+  var lines = DIALOGUE[cls.roundIndex][bandFor(st.S)];
+  $("rd-hear").innerHTML = lines.map(function(l){
+    return l[0] === null
+      ? '<li class="stage">' + esc(l[1]) + "</li>"
+      : '<li><span class="who">' + esc(l[0]) + "</span> — " + esc(l[1]) + "</li>";
+  }).join("");
+
+  $("rd-meters").innerHTML = meterHTML("Climate", st.C, "climate")
+                           + meterHTML("Safety", st.S, "safety")
+                           + meterHTML("Delivery", st.P, "delivery");
+
+  $("rd-acts").innerHTML = BEHAVIOURS.map(function(b, i){
+    return '<div class="act ' + b.cls + '">' +
+      '<div class="aname">' + b.label + "</div>" +
+      '<div class="adesc">' + esc(b.desc) + "</div>" +
+      '<div class="arow">' +
+        '<button type="button" data-act="-" data-i="' + i + '" aria-label="Remove a point from ' + b.label + '">−</button>' +
+        '<span class="n" id="n' + i + '">' + cls.alloc[i] + "</span>" +
+        '<button type="button" data-act="+" data-i="' + i + '" aria-label="Add a point to ' + b.label + '">+</button>' +
+        '<span class="key">key ' + (i + 1) + "</span>" +
+      "</div></div>";
+  }).join("");
+
+  updateAllocUI();
+  show("s-round", $("rd-panel"));
+}
+
+function allocTotal(){ return cls.alloc[0] + cls.alloc[1] + cls.alloc[2] + cls.alloc[3]; }
+function updateAllocUI(){
+  var t = allocTotal(), i, el;
+  for (i = 0; i < 4; i++){ el = $("n" + i); if (el) el.textContent = cls.alloc[i]; }
+  $("rd-left").textContent = (3 - t) + " left";
+  $("commitBtn").disabled = t !== 3;
+}
+function addPoint(i){ if (allocTotal() >= 3) return; cls.alloc[i]++; cls.order.push(i); updateAllocUI(); }
+function removeLast(){ if (!cls.order.length) return; cls.alloc[cls.order.pop()]--; updateAllocUI(); }
+
+function commitRound(){
+  if (allocTotal() !== 3) return;
+  var before = { C:cls.state.C, S:cls.state.S, P:cls.state.P };
+  var after = stepRound(cls.state, cls.alloc, SENIOR[cls.senior]);
+  cls.history.push({
+    round: cls.roundIndex + 1, alloc: cls.alloc.slice(), before: before,
+    after: { C:after.C, S:after.S, P:after.P }, deltas: after.deltas, gate: after.gate
+  });
+  cls.state = after;
+  renderConsequence();
+}
+
+function deltaBlock(label, v){
+  var cn = v > 0.5 ? "pos" : v < -0.5 ? "neg" : "flat";
+  return '<div class="delta ' + cn + '"><div class="dl">' + label + "</div>" +
+         '<div class="dv">' + (v > 0 ? "+" : "") + v.toFixed(1) + "</div></div>";
+}
+
+function renderConsequence(){
+  var h = cls.history[cls.history.length - 1];
+  $("cons-count").textContent = "Round " + h.round + " / 8 · committed";
+  seniorChip($("cons-senior"));
+  $("cons-deltas").innerHTML = deltaBlock("Climate", h.deltas.dC)
+                             + deltaBlock("Safety", h.deltas.dS)
+                             + deltaBlock("Delivery", h.deltas.dP);
+  var c = CONSEQUENCE[h.round - 1];
+  $("cons-line").textContent = c[h.deltas.dS > 2 ? "pos" : h.deltas.dS < -1 ? "neg" : "neu"];
+  $("nextRound").textContent = h.round === 8 ? "Debrief →" : "Next round →";
+  show("s-cons", document.querySelector("#s-cons .cons"));
+}
+
+function advanceRound(){
+  if (cls.roundIndex === 7){ openDebrief(); return; }
+  cls.roundIndex++;
+  cls.alloc = [0,0,0,0];
+  cls.order = [];
+  renderRound();
+}
+
+/* ── DEBRIEF ─────────────────────────────────────────────────── */
+function openDebrief(){
+  cls.dbPanel = 0;
+  seniorChip($("db-senior"));
+  renderDebriefPanel();
+  show("s-debrief", $("db1"));
+  drawChartDeferred();
+}
+function renderDebriefPanel(){
+  [1,2,3,4].forEach(function(n){ $("db" + n).hidden = (cls.dbPanel !== n - 1); });
+  $("dbDots").innerHTML = [0,1,2,3].map(function(i){
+    return '<span class="pdot' + (i <= cls.dbPanel ? " on" : "") + '"></span>';
+  }).join("");
+  $("dbPrev").disabled = cls.dbPanel === 0;
+  $("dbNext").disabled = cls.dbPanel === 3;
+  if (cls.dbPanel === 0) drawChartDeferred();
+  if (cls.dbPanel === 1) renderGate();
+  if (cls.dbPanel === 3) renderClassMatrix();
+}
+
+/* Panel 1 — canvas trajectory. Fixed-pixel container, two nested rAF, dpr scaling. */
+function drawChartDeferred(){
+  requestAnimationFrame(function(){ requestAnimationFrame(drawChart); });
+}
+function drawChart(){
+  var wrap = $("chartWrap"), cv = $("chart");
+  if (!wrap || !cv || $("db1").hidden) return;
+  var w = wrap.clientWidth, h = wrap.clientHeight;
+  if (!w || !h) return;
+
+  var dpr = window.devicePixelRatio || 1;
+  cv.width = Math.round(w * dpr);
+  cv.height = Math.round(h * dpr);
+  var g = cv.getContext("2d");
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, w, h);
+
+  var padL = 58, padR = 24, padT = 24, padB = 42;
+  var plotW = w - padL - padR, plotH = h - padT - padB;
+  function X(i){ return padL + (plotW * i) / 8; }
+  function Y(v){ return padT + plotH * (1 - v / 100); }
+
+  g.font = '11px "Space Mono", monospace';
+  [0,25,50,75,100].forEach(function(v){
+    g.strokeStyle = SLT; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(padL, Y(v)); g.lineTo(padL + plotW, Y(v)); g.stroke();
+    g.fillStyle = SLT; g.textAlign = "right"; g.textBaseline = "middle";
+    g.fillText(String(v), padL - 10, Y(v));
+  });
+  g.strokeStyle = INK; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(padL, padT); g.lineTo(padL, padT + plotH); g.lineTo(padL + plotW, padT + plotH); g.stroke();
+  g.fillStyle = SLT; g.textAlign = "center"; g.textBaseline = "top";
+  for (var r = 1; r <= 8; r++) g.fillText("R" + r, X(r), padT + plotH + 12);
+
+  function line(vals, colour, dash, width){
+    g.setLineDash(dash || []);
+    g.strokeStyle = colour; g.lineWidth = width || 4;
+    g.lineJoin = "round";
+    g.beginPath();
+    vals.forEach(function(v, i){ i ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v)); });
+    g.stroke();
+    g.setLineDash([]);
+  }
+  function dots(vals, colour){
+    vals.forEach(function(v, i){
+      if (!i) return;
+      g.fillStyle = colour;
+      g.beginPath(); g.arc(X(i), Y(v), 5, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = INK; g.lineWidth = 2; g.stroke();
+    });
+  }
+
+  var C = [40], S = [35], P = [50];
+  cls.history.forEach(function(hh){ C.push(hh.after.C); S.push(hh.after.S); P.push(hh.after.P); });
+
+  var cfP = [50];
+  runPath(CANON["Ordered"], cls.senior).trace.forEach(function(t){ cfP.push(t.P); });
+
+  line(cfP, SLT, [9,6], 3);
+  line(C, OCH); dots(C, OCH);
+  line(S, "#3FBFA8"); dots(S, "#3FBFA8");
+  line(P, INK); dots(P, INK);
+}
+window.addEventListener("resize", function(){
+  if (current === "s-debrief" && cls.dbPanel === 0) drawChartDeferred();
+});
+
+/* Panel 2 — the gate */
+function renderGate(){
+  var maxH = 300;
+  $("gateChart").innerHTML = cls.history.map(function(h){
+    var cn = h.alloc[2] > 0 ? (h.before.C >= 60 ? "chal-above" : "chal-below") : "";
+    var px = Math.max(8, Math.round(maxH * (h.after.C / 100)));
+    return '<div class="gate-col ' + cn + '" style="height:' + px + 'px" ' +
+           'title="Round ' + h.round + " — climate " + Math.round(h.after.C) + '"></div>';
+  }).join("") + '<div class="gate-line" style="bottom:' + Math.round(maxH * 0.60) + 'px"><b>Climate 60</b></div>';
+
+  $("gateLabels").innerHTML = cls.history.map(function(h){ return "<div>R" + h.round + "</div>"; }).join("");
+
+  var below = 0, above = 0;
+  cls.history.forEach(function(h){
+    if (h.alloc[2] > 0){ if (h.before.C >= 60) above++; else below++; }
+  });
+  var head;
+  if (above + below === 0) head = "You never spent a point on Challenge. Nothing was gated — and nothing was stretched either.";
+  else if (below === 0) head = "Challenge above the line paid, in all " + above + " round" + (above === 1 ? "" : "s") + " you spent it. That is the sequence.";
+  else if (above === 0) head = "Challenge below the line cost you, in all " + below + " round" + (below === 1 ? "" : "s") + " you spent it. Every point took safety out of the team.";
+  else head = "Challenge below the line cost you — " + below + " round" + (below === 1 ? "" : "s") +
+              ". Challenge above the line paid — " + above + ".";
+  $("gateHead").textContent = head;
+}
+
+/* Panel 4 / §5 — the shared matrix */
+var QUADS = [
+  { n:"Anxiety",  c:"q-anx" },
+  { n:"Learning", c:"q-lea" },
+  { n:"Apathy",   c:"q-apa" },
+  { n:"Comfort",  c:"q-com" }
+];
+function quadName(x, y){
+  return y >= 50 ? (x >= 50 ? "Learning" : "Anxiety") : (x >= 50 ? "Comfort" : "Apathy");
+}
+function renderMatrix(hostId, markers){
+  /* Inset the plotted position so a marker at an extreme never sits half outside the
+     block, and nudge a value sitting exactly on the 50/50 boundary a hair into the
+     quadrant it was named as. The reported numbers are the true, unclamped ones. */
+  function inset(v){ return clamp(v === 50 ? 50.8 : v, 4, 96); }
+  $(hostId).innerHTML =
+    QUADS.map(function(q){ return '<div class="q ' + q.c + '"><div class="qn">' + q.n + "</div></div>"; }).join("") +
+    markers.map(function(mk){
+      return '<div class="mk' + (mk.ref ? " ref" : "") + (mk.x > 64 ? " flip" : "") +
+             '" style="left:' + inset(mk.x) + "%;bottom:" + inset(mk.y) + '%">' +
+               '<div class="dot"></div>' +
+               (mk.label ? '<div class="lab">' + esc(mk.label) + "</div>" : "") +
+             "</div>";
+    }).join("");
+}
+/* class axes: x = final climate; y = accountability pressure spent (challenge + 0.45 · direct) */
+function classY(allocs){
+  var sum = 0;
+  allocs.forEach(function(a){ sum += a[2] + 0.45 * a[3]; });
+  return clamp((sum / 12) * 100, 0, 100);
+}
+function renderClassMatrix(){
+  var x = clamp(cls.state.C, 0, 100);
+  var y = classY(cls.history.map(function(h){ return h.alloc; }));
+
+  function ref(fn){
+    var res = runPath(fn, cls.senior);
+    return { x: clamp(res.end.C, 0, 100), y: classY(res.trace.map(function(t){ return t.alloc; })) };
+  }
+  var ord = ref(CANON["Ordered"]), sup = ref(CANON["Comfort"]), dir = ref(CANON["Command"]);
+
+  renderMatrix("classMatrix", [
+    { x:ord.x, y:ord.y, label:"Ordered path", ref:true },
+    { x:sup.x, y:sup.y, label:"All support",  ref:true },
+    { x:dir.x, y:dir.y, label:"Direct-heavy", ref:true },
+    { x:x,     y:y,     label:"You" }
+  ]);
+
+  var q = quadName(x, y);
+  $("db4-quad").textContent = q;
+  $("db4-read").textContent = ({
+    Learning:"Climate held, and you spent the stretch on top of it. That ordering is the whole finding: the team could be pushed because it was already safe enough to be pushed.",
+    Comfort:"The team is safe and under-asked. Nobody here is frightened and nobody here is being stretched either, which is why delivery ended where it did.",
+    Anxiety:"You asked a great deal of a team that had not been given the ground to stand on. The demand was real; the climate underneath it was not.",
+    Apathy:"Low climate and low demand. Nothing was asked and nothing was built — the quietest failure mode on the board, and the hardest one to see from the front of the room."
+  })[q];
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SOLO MODE
+   ═══════════════════════════════════════════════════════════════ */
+var solo;
+function soloReset(){
+  solo = { i:0, r:0, picks:[], climates:[], spoke:[], theta:62, state:initState() };
+}
+soloReset();
+
+/* rotate the option order per moment so position is not a tell */
+function rotated(list, k){
+  var out = [], i;
+  for (i = 0; i < list.length; i++) out.push(list[(i + k) % list.length]);
+  return out;
+}
+
+function renderMoment(){
+  var m = MOMENTS[solo.i];
+  $("m-count").textContent = "Moment " + (solo.i + 1) + " / 8";
+  $("m-prog").innerHTML = MOMENTS.map(function(_, i){
+    return '<div class="pseg' + (i < solo.i ? " done" : i === solo.i ? " now" : "") + '"></div>';
+  }).join("");
+  $("m-title").textContent = m.title;
+  $("m-scene").textContent = m.scene;
+  $("m-choices").innerHTML = rotated(m.choices, solo.i % 4).map(function(c, i){
+    return '<button class="choice" data-style="' + c.s + '">' +
+             '<span class="num">' + (i + 1) + "</span><span>" + esc(c.t) + "</span></button>";
+  }).join("");
+  show("s-solo1", $("m-panel"));
+}
+
+function pick(style){
+  /* §4.3 — one-point version of the class model: m = 1, d = 1.2, kappa = 0.35,
+     no events, no repetition damping, ceiling 88. Computed, never displayed. */
+  solo.state = stepRound(solo.state, STYLE[style].alloc,
+    { ceiling:88, m:1.0, d:1.2, kappaFixed:0.35, noDamping:true, noEvents:true });
+  var C = solo.state.C;
+  var spoke = C >= solo.theta;
+
+  solo.picks.push(style);
+  solo.climates.push(C);
+  solo.spoke.push(spoke);
+
+  var t = solo.theta;
+  if (spoke) t -= 4;                                   /* trust compounds */
+  if (style === "direct") t += 9;
+  if (style === "challenge" && C < 60) t += 4;
+  solo.theta = clamp(t, 30, 85);
+
+  if (solo.i === 7){ solo.r = 0; renderReplay(); }
+  else { solo.i++; renderMoment(); }
+}
+
+/* ── PASS TWO ────────────────────────────────────────────────── */
+function renderReplay(){
+  var i = solo.r, m = MOMENTS[i], style = solo.picks[i], C = solo.climates[i];
+  $("r-count").textContent = "Rin · moment " + (i + 1) + " / 8";
+  $("r-prog").innerHTML = MOMENTS.map(function(_, k){
+    return '<div class="pseg' + (k < i ? " done" : k === i ? " now" : "") + '"></div>';
+  }).join("");
+  $("r-title").textContent = m.title;
+  $("r-heard").textContent = m.heard[style];
+  $("r-thought").textContent = MONOLOGUE[i][C < 45 ? "low" : C < 65 ? "mid" : "high"];
+  $("r-saidwrap").innerHTML = solo.spoke[i]
+    ? '<div class="rin-said">“' + esc(m.said) + '”</div>'
+    : '<div><span class="unsaid-tag">unsaid</span></div>' +
+      '<div class="rin-said unsaid"><s>' + esc(m.withheld) + "</s></div>";
+  $("rNext").textContent = i === 7 ? "See your result →" : "Next →";
+  show("s-solo2", $("r-panel"));
+}
+
+/* ── RESULTS ─────────────────────────────────────────────────── */
+var TAXONOMY = {
+  support:   { name:"Supportive",    c:"p-support",
+               f:"Affects psychological safety only indirectly, through team climate. McKinsey, 2021." },
+  consult:   { name:"Consultative",  c:"p-consult",
+               f:"Affects psychological safety both directly and through climate. Standardised coefficient 0.54. McKinsey, 2021." },
+  challenge: { name:"Challenging",   c:"p-challenge",
+               f:"No significant effect without a positive team climate already in place. McKinsey, 2021." },
+  direct:    { name:"Authoritative", c:"p-direct",
+               f:"Command and control. Detrimental to psychological safety. McKinsey, 2021." }
+};
+
+function renderResults(){
+  var c = { support:0, consult:0, challenge:0, direct:0 };
+  solo.picks.forEach(function(s){ c[s]++; });
+
+  /* Block A */
+  $("res-profile").innerHTML = ["support","consult","challenge","direct"].map(function(k){
+    var t = TAXONOMY[k];
+    return '<div class="pcard ' + t.c + '"><div class="cnt">' + c[k] + "</div>" +
+           '<div class="nm">' + t.name + '</div><div class="fd">' + esc(t.f) + "</div></div>";
+  }).join("");
+
+  /* Block B */
+  var sumC = 0, sumH = 0;
+  solo.picks.forEach(function(s){ sumC += STYLE[s].climateW; sumH += STYLE[s].challengeW; });
+  var x = clamp(((sumC + 7.2) / 15.2) * 100, 0, 100);
+  var y = clamp((sumH / 8.0) * 100, 0, 100);
+  var q = quadName(x, y);
+
+  renderMatrix("soloMatrix", [{ x:x, y:y, label:"You" }]);
+  $("res-quad").textContent = q;
+  $("res-coords").innerHTML = "Climate " + x.toFixed(0) + " · Challenge " + y.toFixed(0) + "<br>" +
+    "Σ climate " + sumC.toFixed(2) + " over [−7.2, 8.0] · Σ challenge " + sumH.toFixed(2) + " over [0, 8.0]";
+  $("res-read").textContent = quadRead(q, c);
+
+  /* Block C */
+  var unheard = [];
+  solo.spoke.forEach(function(sp, i){ if (!sp) unheard.push(i); });
+  if (unheard.length){
+    $("res-ledger").innerHTML =
+      "<p>Rin held " + unheard.length + " of 8 contributions back. None of these are feelings. " +
+      "Every one of them was information you did not get.</p>" +
+      '<ul class="ledger">' + unheard.map(function(i){
+        return '<li><span class="lm">Moment ' + (i + 1) + " — " +
+               esc(MOMENTS[i].title.split("— ")[1]) + "</span>" + esc(MOMENTS[i].withheld) + "</li>";
+      }).join("") + "</ul>";
+  } else {
+    $("res-ledger").innerHTML = "<p>" + (y < 50
+      ? "Rin spoke in all eight moments and the ledger is empty. Read that carefully: she was safe throughout and she was never stretched. A team that tells you everything and is asked for nothing is a comfortable team, not a high-performing one."
+      : "Rin spoke in all eight moments and the ledger is empty. Everything she had reached you, and you kept asking the team for more than it thought it could do. That combination is the whole point of the exercise."
+    ) + "</p>";
+  }
+
+  /* Block D — sequence */
+  var climIdx = [], chalIdx = [];
+  solo.picks.forEach(function(s, i){
+    (s === "support" || s === "consult" ? climIdx : chalIdx).push(i + 1);
+  });
+  function mean(a){
+    if (!a.length) return null;
+    var t = 0; a.forEach(function(v){ t += v; }); return t / a.length;
+  }
+  var mc = mean(climIdx), mh = mean(chalIdx), verdict, means, note;
+  if (mc === null || mh === null){
+    verdict = mc === null ? "All challenge" : "All climate";
+    means = mc === null ? "No climate-building choices to average · challenge-building " + mh.toFixed(2)
+                        : "Climate-building " + mc.toFixed(2) + " · no challenge-building choices to average";
+    note = mc === null
+      ? "You never spent a moment building the ground first. Challenging leadership has no significant effect on psychological safety without a positive team climate already in place (McKinsey, 2021) — you asked for the return without laying down the condition it depends on."
+      : "You built climate in all eight moments and never asked the team to exceed what it thought it could do. Climate is the condition for challenge, not a substitute for it.";
+  } else {
+    var ordered = mc < mh;
+    verdict = ordered ? "Ordered" : "Inverted";
+    means = "Mean moment index — climate-building " + mc.toFixed(2) + " · challenge-building " + mh.toFixed(2);
+    note = ordered
+      ? "You built the ground before you asked the team to stand on it. That is the finding: challenging leadership only strengthens psychological safety where a positive team climate already exists (McKinsey, 2021)."
+      : "You asked the team to stretch before you had built the climate to carry it. Challenging leadership has no significant effect on psychological safety without a positive team climate already in place (McKinsey, 2021) — the same eight choices in the other order would not have cost you the same.";
+  }
+  $("res-seq").textContent = verdict;
+  $("res-seq-means").textContent = means;
+  $("res-seq-note").textContent = note;
+
+  /* Development prompt */
+  var dev;
+  if ((c.direct + c.challenge) >= 4 && c.consult <= 2){
+    dev = { k:"situational humility",
+      html:"<b>Situational humility.</b> You led decisively and you led from the front. The skill that most " +
+           "reliably converts that into consultative behaviour — a personal-growth mindset, curiosity, the " +
+           "working assumption that somebody in the room knows something you do not — is addressed by just " +
+           "<b>36%</b> of organisations in their development programmes (McKinsey, 2021). Among the least " +
+           "taught, and among the most predictive." };
+  } else if (c.support >= 4 && c.challenge <= 1){
+    dev = { k:"sponsorship",
+      html:"<b>Sponsorship</b> — enabling others’ success ahead of your own. You built a team that was safe " +
+           "and asked very little of it. Sponsorship predicts <i>both</i> consultative and challenging " +
+           "behaviour, and appears in just <b>26%</b> of leadership development programmes (McKinsey, 2021). " +
+           "It is the bridge from a comfortable team to a learning one." };
+  } else {
+    dev = { k:"open dialogue",
+      html:"<b>Open dialogue.</b> Your profile is mixed, which is usually the right answer. The next increment " +
+           "is deliberateness: name, before each moment, whether you are building the ground or asking the team " +
+           "to stand on it — and do not do the second before the first. Positive team climate is the strongest " +
+           "driver of psychological safety, ahead of leader relations and work design, and just <b>43%</b> of " +
+           "respondents report one (McKinsey, 2021)." };
+  }
+  $("res-dev").innerHTML = dev.html;
+
+  window.__copyText = [
+    "THE SEQUENCE — solo result",
+    "",
+    "PROFILE (8 moments)",
+    "  Supportive     " + c.support,
+    "  Consultative   " + c.consult,
+    "  Challenging    " + c.challenge,
+    "  Authoritative  " + c.direct,
+    "",
+    "WHERE I LAND (Edmondson 2x2)",
+    "  Quadrant: " + q,
+    "  Coordinates: climate " + x.toFixed(0) + "/100, challenge " + y.toFixed(0) + "/100",
+    "  Raw sums: climate " + sumC.toFixed(2) + " over [-7.2, 8.0], challenge " + sumH.toFixed(2) + " over [0, 8.0]",
+    "",
+    "SEQUENCE",
+    "  " + verdict,
+    "  " + means,
+    "",
+    "UNHEARD LEDGER",
+    "  " + unheard.length + " of 8 contributions withheld" +
+      (unheard.length ? " (moments " + unheard.map(function(i){ return i + 1; }).join(", ") + ")" : ""),
+    "",
+    "DEVELOPMENT PROMPT",
+    "  " + dev.k,
+    "",
+    "Source: McKinsey Global Survey, \"Psychological safety and the critical role of",
+    "leadership development\", 11 February 2021. Fielded 14-29 May 2020; 1,574",
+    "respondents, 1,223 analysed. 2x2 matrix after Amy Edmondson."
+  ].join("\n");
+
+  show("s-results", $("s-results"));
+}
+
+function quadRead(q, c){
+  if (q === "Learning")
+    return "You built ground and then asked the team to stand on it — " + c.consult + " consultative and " +
+           c.support + " supportive moves alongside " + c.challenge + " challenging ones. " +
+           (c.direct > 2
+             ? "The " + c.direct + " authoritative calls are the drag on your climate score, and the cheapest thing here to give up."
+             : "You almost never fell back on deciding alone, which is what kept the climate axis where it is.");
+  if (q === "Comfort")
+    return "You spent " + (c.support + c.consult) + " of eight moments on climate and " + c.challenge +
+           " on stretch. The team is safe with you and it is not being asked for much. Comfort is not failure — " +
+           "it is the half of the sequence most leaders complete and then stop at. The other half is asking for " +
+           "more than the team thinks it can do, which only becomes available once the climate is there.";
+  if (q === "Anxiety")
+    return "You asked hard things — " + c.challenge + " challenging and " + c.direct + " authoritative moves — " +
+           "of a team you had spent " + (c.support + c.consult) + " moments building. The demand is not the " +
+           "problem. It arrived before the ground did, and the ledger above is what that cost you in information.";
+  return "Neither axis moved: " + (c.support + c.consult) + " climate-building moves and " + c.challenge +
+         " challenging ones, against " + c.direct + " decisions taken alone. This is the quietest of the four " +
+         "outcomes. Nothing was asked and nothing was built, and a team in this position rarely tells you it is there.";
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EVENTS
+   ═══════════════════════════════════════════════════════════════ */
+document.addEventListener("click", function(e){
+  var t = e.target;
+  var go = t.closest ? t.closest("[data-go]") : null;
+  if (go){ route(go.getAttribute("data-go")); return; }
+
+  var sen = t.closest("[data-senior]");
+  if (sen){
+    cls.senior = sen.getAttribute("data-senior");
+    Array.prototype.forEach.call(document.querySelectorAll("[data-senior]"), function(b){
+      b.setAttribute("aria-pressed", String(b === sen));
+    });
+    return;
+  }
+
+  var act = t.closest("[data-act]");
+  if (act){
+    var i = +act.getAttribute("data-i");
+    if (act.getAttribute("data-act") === "+") addPoint(i);
+    else if (cls.alloc[i] > 0){
+      cls.alloc[i]--;
+      var k = cls.order.lastIndexOf(i);
+      if (k > -1) cls.order.splice(k, 1);
+      updateAllocUI();
+    }
+    return;
+  }
+
+  var ch = t.closest(".choice");
+  if (ch){ pick(ch.getAttribute("data-style")); }
+});
+
+$("startRounds").addEventListener("click", function(){
+  cls.state = initState(); cls.history = []; cls.roundIndex = 0;
+  cls.alloc = [0,0,0,0]; cls.order = [];
+  renderRound();
+});
+$("commitBtn").addEventListener("click", commitRound);
+$("nextRound").addEventListener("click", advanceRound);
+$("dbNext").addEventListener("click", function(){ if (cls.dbPanel < 3){ cls.dbPanel++; renderDebriefPanel(); } });
+$("dbPrev").addEventListener("click", function(){ if (cls.dbPanel > 0){ cls.dbPanel--; renderDebriefPanel(); } });
+$("dbRestart").addEventListener("click", function(){ route("class"); });
+$("rNext").addEventListener("click", function(){
+  if (solo.r === 7) renderResults(); else { solo.r++; renderReplay(); }
+});
+$("copyBtn").addEventListener("click", function(){
+  var txt = window.__copyText || "";
+  function done(ok){ $("copyMsg").textContent = ok ? "Copied to clipboard" : "Select and copy from the box"; }
+  function fallback(){
+    if (!$("copyTA")){
+      var ta = document.createElement("textarea");
+      ta.id = "copyTA"; ta.setAttribute("readonly", "");
+      ta.style.cssText = "width:100%;height:240px;margin-top:14px;font-family:var(--f-mono);font-size:12px;" +
+                         "border:3px solid var(--ink);background:var(--bone);color:var(--ink);padding:10px";
+      $("copyOut").appendChild(ta);
+    }
+    var box = $("copyTA");
+    box.value = txt; box.focus(); box.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (err){ ok = false; }
+    done(ok);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fallback);
+  } else fallback();
+});
+
+/* Keyboard — full operation without a mouse, in both modes */
+document.addEventListener("keydown", function(e){
+  var tag = (e.target.tagName || "").toLowerCase();
+  if (tag === "textarea" || tag === "input") return;
+
+  if (current === "s-round"){
+    if (e.key >= "1" && e.key <= "4"){ e.preventDefault(); addPoint(+e.key - 1); return; }
+    if (e.key === "Backspace"){ e.preventDefault(); removeLast(); return; }
+    if (e.key === "Enter"){ e.preventDefault(); commitRound(); return; }
+  } else if (current === "s-cons"){
+    if (e.key === "ArrowRight" || e.key === "Enter"){ e.preventDefault(); advanceRound(); return; }
+  } else if (current === "s-debrief"){
+    if (e.key === "ArrowRight" || e.key === "Enter"){
+      e.preventDefault(); if (cls.dbPanel < 3){ cls.dbPanel++; renderDebriefPanel(); } return;
+    }
+    if (e.key === "ArrowLeft"){
+      e.preventDefault(); if (cls.dbPanel > 0){ cls.dbPanel--; renderDebriefPanel(); } return;
+    }
+  } else if (current === "s-solo1"){
+    if (e.key >= "1" && e.key <= "4"){
+      var b = document.querySelectorAll("#m-choices .choice")[+e.key - 1];
+      if (b){ e.preventDefault(); pick(b.getAttribute("data-style")); }
+      return;
+    }
+  } else if (current === "s-solo2"){
+    if (e.key === "ArrowRight" || e.key === "Enter"){
+      e.preventDefault();
+      if (solo.r === 7) renderResults(); else { solo.r++; renderReplay(); }
+      return;
+    }
+  }
+
+  if (e.key === "f" || e.key === "F"){
+    if (!document.fullscreenElement){
+      if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+    } else if (document.exitFullscreen) document.exitFullscreen();
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   ROUTING — deep links #class and #solo
+   ═══════════════════════════════════════════════════════════════ */
+function route(where){
+  if (where === "class"){
+    classReset();
+    if (location.hash !== "#class") history.replaceState(null, "", "#class");
+    show("s-setup", document.querySelector("#s-setup .panel"));
+  } else if (where === "solo"){
+    soloReset();
+    if (location.hash !== "#solo") history.replaceState(null, "", "#solo");
+    renderMoment();
+  } else {
+    history.replaceState(null, "", location.pathname + location.search);
+    show("s-landing");
+  }
+}
+window.addEventListener("hashchange", function(){
+  var h = location.hash;
+  if (h === "#class" && current !== "s-setup") route("class");
+  else if (h === "#solo" && current !== "s-solo1") route("solo");
+  else if (!h && current !== "s-landing") route("landing");
+});
+
+(function boot(){
+  if (new URLSearchParams(location.search).get("trace") === "1") printTraces();
+  var h = location.hash;
+  if (h === "#class") route("class");
+  else if (h === "#solo") route("solo");
+  else show("s-landing");
+})();
+</script>
+</body>
+</html>
