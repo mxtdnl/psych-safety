@@ -479,7 +479,12 @@ body.is-ink .pseg.now{background:var(--ochre)}
 .rin-scores b{color:var(--ochre)}
 
 /* results */
-.headline-row{display:flex;gap:26px;align-items:flex-start;margin-top:18px;flex-wrap:wrap}
+.blocksub{font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.08em;
+  font-size:var(--t-label);color:var(--slate);margin-top:10px}
+.blocksub b{color:var(--ink)}
+.blocklede{margin-top:14px;max-width:78ch;line-height:1.5}
+.headline-row{display:flex;gap:26px;align-items:flex-start;margin-top:20px;flex-wrap:wrap}
+.bignum small{font-size:26px;font-weight:700}
 .bignum{font-family:var(--f-mono);font-weight:700;font-size:76px;line-height:.94;
   border:var(--key) solid var(--ink);background:var(--ochre);color:var(--ink);padding:14px 20px;flex:0 0 auto}
 .bignum-side{flex:1 1 320px;min-width:260px;line-height:1.46}
@@ -916,27 +921,36 @@ body.is-ink .pseg.now{background:var(--ochre)}
   </div>
 
   <div class="res-block panel">
-    <h2>A · Situational discrimination</h2>
+    <h2>A · Did you read the team?</h2>
+    <div class="blocksub">Situational discrimination · <b id="res-disc-band"></b></div>
+    <p class="blocklede">In part two you gave 32 effectiveness ratings — four responses across eight
+      situations. This is how closely they matched the key: <b>100</b> would mean every rating matched
+      exactly, <b>0</b> would mean every one was as far out as it could be. It measures whether you read
+      the team in front of you, not whether you prefer a particular style of leadership. The full key,
+      and the four rules behind it, are in section F.</p>
     <div class="headline-row">
-      <div class="bignum" id="res-disc"></div>
+      <div class="bignum"><span id="res-disc"></span><small>/100</small></div>
       <div class="bignum-side">
         <p id="res-disc-read"></p>
       </div>
     </div>
-    <div class="srcstrip">
-      How closely your 32 effectiveness ratings tracked the key. It measures whether you read the team,
-      not whether you prefer a style.
-    </div>
   </div>
 
   <div class="res-block panel" style="margin-left:22px">
-    <h2>B · The sequence</h2>
+    <h2>B · Did your answer change when the team changed?</h2>
+    <div class="blocksub">Sequence index · <b id="res-seq-band"></b></div>
+    <p class="blocklede">Four of the eight situations described a team that had already shown it could
+      disagree with you. Four described a team that had not. This is the gap between how you rated the
+      <b>challenging</b> response in each group, on the same 1–5 scale — so it runs from −4 to +4. The key
+      moves <b>+3.5</b>: the same move is worth almost nothing in one team and more than anything else on
+      the list in the other.</p>
     <div class="headline-row">
       <div class="bignum" id="res-seq"></div>
       <div class="bignum-side">
         <p id="res-seq-read"></p>
       </div>
     </div>
+    <div class="mono" style="color:var(--slate);margin-top:24px">Your rating of the challenging response, against the key</div>
     <div class="seqbars" id="res-seqbars"></div>
     <div class="srcstrip">
       Challenging leadership has no significant effect on psychological safety without a positive team
@@ -1445,23 +1459,23 @@ var SJT = [
       { s:"consult",   k:4, t:"Open by asking the team what in the process let it through.",
         why:"Moves the question off the person and onto the system, and asks before deciding." },
       { s:"challenge", k:1, t:"Ask Dee to walk the team through what happened and what she would change.",
-        why:"The same sentence that is the best available response in a team with climate is close to the worst in a team without it. That is the finding." },
+        why:"Word for word what is on offer in the situation with Marcus, where it is keyed 5. Best available response in one team, close to the worst in the other." },
       { s:"direct",    k:2, t:"Issue the correction, the fix and the new check in the first two minutes, then move on.",
         why:"Efficient, and it teaches the team that errors are closed rather than examined." }
     ] },
 
   { n:4, climate:"high",
-    title:"The error, open team",
-    stem:"A deliverable went out with a mistake. It is Marcus's work. Twice this quarter Marcus has raised his own errors before anyone else found them, and the team's post-mortems routinely name people without heat.",
+    title:"The stretch",
+    stem:"A stakeholder wants the team to take on something none of them has done. This is a team where people routinely say which parts they are worst at, and last month one of them turned a piece of work down as beyond her.",
     r:[
-      { s:"support",   k:2, t:"Open the call yourself and take the error onto your own desk.",
-        why:"Protective, and it removes the learning from the person best placed to do it. This team does not need the cover." },
-      { s:"consult",   k:4, t:"Open by asking the team what in the process let it through.",
-        why:"Consultative behaviour holds its value regardless of climate." },
-      { s:"challenge", k:5, t:"Ask Marcus to walk the team through what happened and what he would change.",
-        why:"Word for word the option keyed 1 in the previous scenario. The team, not the sentence, is what changed." },
-      { s:"direct",    k:2, t:"Issue the correction, the fix and the new check, and move on.",
-        why:"Detrimental to safety, and it wastes a team that had already volunteered the harder version." }
+      { s:"support",   k:3, t:"Take it, and tell them plainly you will carry it upward if it goes wrong.",
+        why:"Worth saying. It is not the constraint here — the climate that would make it necessary already exists." },
+      { s:"consult",   k:5, t:"Put the decision to the team, and commit in advance to backing either answer.",
+        why:"Autonomy over a decision that is genuinely theirs to make." },
+      { s:"challenge", k:5, t:"Take it, and ask each person to name the part they are least equipped for.",
+        why:"Asking people to exceed what they thought possible, in a team that has proven it can say no. This is the sequence completed." },
+      { s:"direct",    k:1, t:"Take it and staff it yourself with the two people you are confident in.",
+        why:"Detrimental to safety, and it tells the rest of the team what you think of them." }
     ] },
 
   { n:5, climate:"low",
@@ -1479,17 +1493,17 @@ var SJT = [
     ] },
 
   { n:6, climate:"high",
-    title:"The stretch",
-    stem:"A stakeholder wants the team to take on something none of them has done. This is a team where people routinely say which parts they are worst at, and last month one of them turned a piece of work down as beyond her.",
+    title:"The dependency that was not there",
+    stem:"A dependency Marcus signed off turned out not to exist, and the team lost a week to it. Twice this quarter Marcus has raised his own errors before anyone else found them, and the team's post-mortems routinely name people without heat.",
     r:[
-      { s:"support",   k:3, t:"Take it, and tell them plainly you will carry it upward if it goes wrong.",
-        why:"Worth saying. It is not the constraint here — the climate that would make it necessary already exists." },
-      { s:"consult",   k:5, t:"Put the decision to the team, and commit in advance to backing either answer.",
-        why:"Autonomy over a decision that is genuinely theirs to make." },
-      { s:"challenge", k:5, t:"Take it, and ask each person to name the part they are least equipped for.",
-        why:"Asking people to exceed what they thought possible, in a team that has proven it can say no. This is the sequence completed." },
-      { s:"direct",    k:1, t:"Take it and staff it yourself with the two people you are confident in.",
-        why:"Detrimental to safety, and it tells the rest of the team what you think of them." }
+      { s:"support",   k:2, t:"Absorb the lost week when you report upward, and keep Marcus's name out of it.",
+        why:"Protective, and it takes the learning off the person best placed to do it. This team has not asked for the cover." },
+      { s:"consult",   k:4, t:"Ask the team how sign-off should work so a missing dependency gets caught next time.",
+        why:"Consultative behaviour holds its value regardless of climate." },
+      { s:"challenge", k:5, t:"Ask Marcus to walk the team through what happened and what he would change.",
+        why:"Word for word what was on offer in the situation with Dee, where it is keyed 1. The team, not the sentence, is what changed." },
+      { s:"direct",    k:2, t:"Write the new sign-off rule yourself and circulate it the same day.",
+        why:"Detrimental to safety, and it answers a team that had already volunteered the harder version with a form." }
     ] },
 
   { n:7, climate:"low",
@@ -1526,7 +1540,7 @@ var SJT = [
 var RIN_EXACT = [
   { i:2, note:"You rated this one exactly as the key does.",
     says:"You had Dee down as not ready, and she was not. Three months and she has not finished a sentence in a meeting without being asked to." },
-  { i:3, note:"And this one, which is the same sentence.",
+  { i:5, note:"And this one, which is word for word the same offer.",
     says:"Same words, different team, and you moved. That is the part most people do not do — it is easier to have a view about the sentence than about us. Reading it right and doing it when it costs you something are not the same, and the next screen is about the second one." }
 ];
 
@@ -1610,14 +1624,14 @@ var RIN = [
       direct:   "Correct." } },
 
   { over:{
-      support:  "Taking it onto your own desk would have been generous, and Marcus had already put his hand up. You would have taken the lesson off the person who wanted it.",
-      consult:  "Reasonable. Not the strongest thing available in that room.",
-      challenge:"No argument at all.",
-      direct:   "We had already volunteered the harder version. You would have replaced it with a checklist." },
+      support:  "Saying you will carry it is decent and we already knew. One of us turned work down last month and nothing happened to her.",
+      consult:  "No argument.",
+      challenge:"No argument. Naming the part I am worst at is the most useful two minutes on that list.",
+      direct:   "Staffing it yourself with the two you trust. The rest of us would have learned exactly where we stand." },
     under:{
-      support:  "You marked it down, which is right. Marcus did not need protecting.",
-      consult:  "A little underrated.",
-      challenge:"You rated it low. It is the same sentence you may have rated highly for Dee, and the difference between them is the whole thing.",
+      support:  "Fine to mark down. It was not the binding constraint.",
+      consult:  "Underrated. That decision was genuinely ours.",
+      challenge:"You marked down the thing this team is for.",
       direct:   "Correct." } },
 
   { over:{
@@ -1632,14 +1646,14 @@ var RIN = [
       direct:   "Correct." } },
 
   { over:{
-      support:  "Saying you will carry it is decent and we already knew. One of us turned work down last month and nothing happened to her.",
-      consult:  "No argument.",
-      challenge:"No argument. Naming the part I am worst at is the most useful two minutes on that list.",
-      direct:   "Staffing it yourself with the two you trust. The rest of us would have learned exactly where we stand." },
+      support:  "Absorbing the week upward would have been generous, and Marcus had already put his hand up. You would have taken the lesson off the person who wanted it.",
+      consult:  "Reasonable, and not the strongest thing available in that room.",
+      challenge:"No argument at all.",
+      direct:   "A sign-off rule by the end of the day. We had already volunteered the harder version and you would have answered it with a form." },
     under:{
-      support:  "Fine to mark down. It was not the binding constraint.",
-      consult:  "Underrated. That decision was genuinely ours.",
-      challenge:"You marked down the thing this team is for.",
+      support:  "You marked it down, which is right. Marcus did not need protecting.",
+      consult:  "A little underrated.",
+      challenge:"You rated it low. It is word for word what you were offered over Dee's error, and the difference between the two is the whole point.",
       direct:   "Correct." } },
 
   { over:{
@@ -2371,6 +2385,8 @@ function renderResults(){
 
   /* A — discrimination */
   $("res-disc").textContent = sc.discrimination;
+  $("res-disc-band").textContent = sc.discrimination >= 85 ? "strong"
+    : sc.discrimination >= 70 ? "mixed" : "low";
   $("res-disc-read").textContent = sc.discrimination >= 85
     ? "You read the team, not the menu. Your ratings moved with the evidence in each stem rather than with a preferred style, which is the skill the survey's central finding actually demands."
     : sc.discrimination >= 70
@@ -2380,6 +2396,8 @@ function renderResults(){
   /* B — the sequence */
   var sy = sc.seqYou;
   $("res-seq").textContent = (sy > 0 ? "+" : "") + sy.toFixed(1);
+  $("res-seq-band").textContent = sy >= 2.0 ? "you sequenced"
+    : sy >= 0.75 ? "under-weighted" : sy > -0.5 ? "flat" : "inverted";
   $("res-seq-read").textContent = sy >= 2.0
     ? "You raised your rating of the challenging response by " + sy.toFixed(1) + " points when the team had shown it could take it. The key shifts by " + sc.seqKey.toFixed(1) + ". You are sequencing."
     : sy >= 0.75
@@ -2388,8 +2406,8 @@ function renderResults(){
     ? "You rated the challenging response about the same regardless of the team in front of you. The key moves " + sc.seqKey.toFixed(1) + " points between them. Challenge is not a style you have or lack — it is a move that is either earned or not."
     : "You rated challenge higher in the teams least able to absorb it. That is the inverted sequence, and it is the most expensive error in the instrument.";
   $("res-seqbars").innerHTML =
-    seqBar("Teams with no climate yet", sc.loMean, sc.keyLo) +
-    seqBar("Teams that had shown it", sc.hiMean, sc.keyHi);
+    seqBar("In the four teams that had not shown it", sc.loMean, sc.keyLo) +
+    seqBar("In the four teams that had", sc.hiMean, sc.keyHi);
 
   /* C — the 2×2, from revealed behaviour */
   renderMatrix("soloMatrix", [{ x:sc.x, y:sc.y, label:"You" }]);
