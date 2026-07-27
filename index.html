@@ -373,7 +373,10 @@ body.mode-class .qn{font-size:24px}
 /* ─────────────────────────────────────────────────────────────
    SOLO MODE
    ───────────────────────────────────────────────────────────── */
-#s-solo1{max-width:920px}
+#s-intro{max-width:920px}
+#s-stated{max-width:900px}
+#s-sjt{max-width:940px}
+#s-dil{max-width:900px}
 .moment-title{font-size:var(--t-head);margin-bottom:14px}
 .scene{font-size:calc(var(--t-body)*1.06);line-height:1.52}
 .choices{display:flex;flex-direction:column;gap:14px;margin-top:24px}
@@ -394,7 +397,7 @@ body.is-ink .pseg.done{background:var(--bone)}
 body.is-ink .pseg.now{background:var(--ochre)}
 
 /* pass two — the one inversion in the whole tool */
-#s-solo2{max-width:920px}
+#s-rin{max-width:900px}
 .rin-block{margin-bottom:24px}
 .rin-lab{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.1em;
   font-size:var(--t-label);color:var(--ochre);margin-bottom:8px}
@@ -410,8 +413,99 @@ body.is-ink .pseg.now{background:var(--ochre)}
   letter-spacing:.1em;font-size:var(--t-label);color:var(--slate);border:2px solid var(--slate);
   padding:1px 8px;margin-bottom:10px}
 
+
+/* ── solo instrument ───────────────────────────────────────────── */
+.parts{margin:20px 0 0;padding-left:0;list-style:none;counter-reset:pt}
+.parts li{counter-increment:pt;position:relative;padding-left:44px;margin-bottom:14px;line-height:1.44}
+.parts li:before{content:counter(pt);position:absolute;left:0;top:0;width:30px;height:30px;
+  border:var(--key) solid var(--ink);font-family:var(--f-mono);font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-size:15px}
+.caveat{border:var(--key) solid var(--ink);border-left:14px solid var(--oxblood);
+  padding:14px 18px;margin-top:26px;font-size:calc(var(--t-body)*.92);line-height:1.45}
+
+/* part one — likert */
+.likert{display:grid;grid-template-columns:1fr auto;gap:14px 20px;align-items:center;
+  padding:12px 0;border-top:2px solid var(--ink)}
+.likert:last-child{border-bottom:2px solid var(--ink)}
+.lk-text{line-height:1.4}
+.lk-scale{display:flex;gap:4px}
+.lk-b{padding:8px 6px;min-width:76px;box-shadow:none;font-size:10px;letter-spacing:.04em;
+  border-width:2px;background:var(--bone);color:var(--ink)}
+.lk-b:active{box-shadow:none;transform:none}
+.lk-b[aria-checked="true"]{background:var(--ink);color:var(--bone)}
+@media (max-width:720px){
+  .likert{grid-template-columns:1fr}
+  .lk-scale{flex-wrap:wrap}
+  .lk-b{flex:1 1 auto;min-width:0}
+}
+
+/* part two — rating rows */
+.rate{border:var(--key) solid var(--ink);padding:14px 16px;margin-bottom:14px}
+.rt-text{line-height:1.4;display:flex;gap:12px;align-items:flex-start}
+.rt-n{font-family:var(--f-mono);font-weight:700;color:var(--slate);flex:0 0 auto}
+.rt-scale{display:flex;gap:6px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.rt-end{color:var(--slate);font-size:11px}
+.rt-b{width:46px;padding:8px 0;box-shadow:none;border-width:2px;background:var(--bone);color:var(--ink);
+  font-size:calc(var(--t-body)*.82)}
+.rt-b:active{box-shadow:none;transform:none}
+.rt-b[aria-checked="true"]{background:var(--ochre);color:var(--ink);border-color:var(--ink)}
+
+/* rin coda */
+.rin-scores{color:var(--slate);margin-top:10px;letter-spacing:.06em}
+.rin-scores b{color:var(--ochre)}
+
 /* results */
-#s-results{max-width:1100px}
+.headline-row{display:flex;gap:26px;align-items:flex-start;margin-top:18px;flex-wrap:wrap}
+.bignum{font-family:var(--f-mono);font-weight:700;font-size:76px;line-height:.94;
+  border:var(--key) solid var(--ink);background:var(--ochre);color:var(--ink);padding:14px 20px;flex:0 0 auto}
+.bignum-side{flex:1 1 320px;min-width:260px;line-height:1.46}
+.seqbars{margin-top:22px;display:flex;flex-direction:column;gap:14px}
+.seqrow{border:var(--key) solid var(--ink);padding:12px 16px}
+.sql{color:var(--slate);margin-bottom:10px}
+.sqset{display:flex;align-items:center;gap:10px;margin-top:6px}
+.sqset>.mono{width:4ch;color:var(--slate)}
+.sqbar{display:flex;gap:4px;flex:1;max-width:340px}
+.sq{flex:1;height:20px;border:2px solid var(--ink);background:var(--bone)}
+.sq.f-you{background:var(--ink)}
+.sq.f-key{background:var(--jade)}
+.sqv{font-weight:700}
+.gaptable{margin-top:18px;border:var(--key) solid var(--ink)}
+.gaprow{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;padding:11px 16px;
+  border-bottom:2px solid var(--ink);font-family:var(--f-mono);font-size:calc(var(--t-label)*1.05)}
+.gaprow:last-child{border-bottom:0}
+.gaphead{background:var(--ink);color:var(--bone);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.gaprow span:not(:first-child){text-align:right}
+.gpos{color:var(--ultramarine);font-weight:700}
+.gneg{color:var(--oxblood);font-weight:700}
+.revitem{border-left:6px solid var(--oxblood);padding-left:16px;margin-bottom:22px}
+.revitem:last-child{margin-bottom:0}
+.revitem .lm{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  font-size:var(--t-label);color:var(--slate);display:block;margin-bottom:6px}
+.revq{font-size:calc(var(--t-body)*1.02);line-height:1.44;margin-bottom:6px}
+.revscore{color:var(--slate);margin-bottom:8px;letter-spacing:.06em}
+.keyrules{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:820px){.keyrules{grid-template-columns:1fr}}
+.krule{border:var(--key) solid var(--ink);padding:14px 16px}
+.krule p{margin-top:8px;font-size:calc(var(--t-body)*.86);line-height:1.42}
+.krule .tag{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  font-size:var(--t-label);display:inline-block;padding:4px 10px;border:var(--key) solid var(--ink)}
+.krule .t-support{background:var(--support);color:var(--ink)}
+.krule .t-consult{background:var(--ultramarine);color:var(--bone)}
+.krule .t-challenge{background:var(--bone);color:var(--ultramarine);border-style:dashed;border-color:var(--ultramarine)}
+.krule .t-direct{background:var(--oxblood);color:var(--bone)}
+.keytable-wrap{margin-top:20px;overflow-x:auto;border:var(--key) solid var(--ink)}
+.keytable{border-collapse:collapse;width:100%;min-width:620px;font-family:var(--f-mono);font-size:13px}
+.keytable th{background:var(--ink);color:var(--bone);text-transform:uppercase;letter-spacing:.06em;
+  padding:10px 12px;text-align:left;font-weight:700}
+.keytable td{padding:9px 12px;border-top:2px solid var(--ink);white-space:nowrap}
+.keytable td:first-child{font-family:var(--f-body)}
+.kyou{color:var(--slate);margin-left:8px;font-size:11px}
+.keytable td.kmatch{background:var(--support)}
+.keytable td.kfar{background:var(--oxblood);color:var(--bone)}
+.keytable td.kfar .kyou{color:var(--bone)}
+
+/* results */
+#s-results{max-width:1120px}
 .res-block{margin-bottom:30px}
 .profile{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
 @media (max-width:860px){.profile{grid-template-columns:repeat(2,1fr)}}
@@ -459,8 +553,8 @@ body.is-ink .pseg.now{background:var(--ochre)}
     </button>
     <button class="panel mode-card solo-c" data-go="solo">
       <span class="mh">Solo mode</span>
-      <span class="tag">Play it. Meet Rin. Eight moments as the leader, then the same eight again as the analyst who was in the room.</span>
-      <span class="meta">8 moments · ~12 min · individual</span>
+      <span class="tag">Sit it. A three-part instrument: what you say you do, how you judge eight teams, and what you choose when the considerate option costs you something.</span>
+      <span class="meta">3 parts · ~12 min · individual</span>
     </button>
   </div>
 
@@ -675,49 +769,114 @@ body.is-ink .pseg.now{background:var(--ochre)}
   </div>
 </section>
 
-<!-- ══════════════════════════ SOLO PASS ONE ══════════════════════════ -->
-<section id="s-solo1" class="screen" aria-label="Solo mode — your choices">
+<!-- ══════════════════════════ SOLO INTRO ══════════════════════════ -->
+<section id="s-intro" class="screen" aria-labelledby="intro-h">
   <div class="topbar">
-    <span class="mono mono-b" id="m-count">Moment 1 / 8</span>
+    <span class="mono mono-b">Solo mode</span>
     <button class="ghost" data-go="landing">← Back</button>
   </div>
-  <div class="progress" id="m-prog"></div>
-  <div class="panel" id="m-panel">
-    <h2 class="moment-title" id="m-title"></h2>
-    <p class="scene" id="m-scene"></p>
-    <div class="choices" id="m-choices"></div>
+  <div class="panel" style="max-width:880px">
+    <h1 id="intro-h" style="font-size:calc(var(--t-display)*.86)">Read the room</h1>
+    <p style="margin-top:18px">Three parts, about twelve minutes. There is no feedback until the end.</p>
+    <ol class="parts">
+      <li><b>What you say you do.</b> Twelve statements. How often is this actually true of you.</li>
+      <li><b>What you judge.</b> Eight situations. Rate all four responses for effectiveness — not one, all four.</li>
+      <li><b>What you choose.</b> Six decisions in which the considerate option costs you something real.</li>
+    </ol>
+    <div class="caveat">
+      <div class="mono mono-b" style="margin-bottom:6px">Before you start</div>
+      This is a teaching instrument, not a validated psychometric. It has no norms, no reliability
+      data and no predictive claim. The scoring key is derived from a single published survey and is
+      shown to you in full at the end, so you can argue with it.
+    </div>
+    <div class="commit-row">
+      <button class="primary" id="startStated">Begin part one →</button>
+    </div>
   </div>
-  <div class="srcstrip">Nothing on this screen is feedback. No score is being shown.</div>
+  <div class="srcstrip">
+    Key derived from McKinsey Global Survey, “Psychological safety and the critical role of leadership
+    development”, 11 February 2021. 2×2 matrix after Amy Edmondson.
+  </div>
 </section>
 
-<!-- ══════════════════════════ SOLO PASS TWO ══════════════════════════ -->
-<section id="s-solo2" class="screen" aria-label="Solo mode — Rin's replay">
+<!-- ══════════════════════════ PART ONE — STATED ══════════════════════════ -->
+<section id="s-stated" class="screen" aria-labelledby="st-h">
   <div class="topbar">
-    <span class="mono mono-b" id="r-count" style="color:var(--ochre)">Rin · moment 1 / 8</span>
+    <span class="mono mono-b">Part one of three · what you say you do</span>
+    <span class="mono" id="st-count" style="color:var(--slate)"></span>
   </div>
-  <div class="progress" id="r-prog"></div>
-  <div class="panel" id="r-panel">
-    <h2 class="moment-title" id="r-title"></h2>
+  <div class="panel" id="st-panel">
+    <h2 id="st-h">In a team you lead, how often do you actually…</h2>
+    <p class="mono" style="color:var(--slate);margin-top:10px">Answer for what is true, not for what you would like to be true.</p>
+    <div id="st-items" style="margin-top:24px"></div>
+    <div class="commit-row">
+      <button class="primary" id="statedNext" disabled>Continue to part two →</button>
+    </div>
+  </div>
+</section>
 
-    <div class="rin-block">
-      <div class="rin-lab">What she heard</div>
-      <div class="rin-heard" id="r-heard"></div>
+<!-- ══════════════════════════ PART TWO — JUDGEMENT ══════════════════════════ -->
+<section id="s-sjt" class="screen" aria-labelledby="sj-h">
+  <div class="topbar">
+    <span class="mono mono-b" id="sj-count">Part two · situation 1 / 8</span>
+    <span class="mono" style="color:var(--slate)">Rate all four</span>
+  </div>
+  <div class="progress" id="sj-prog"></div>
+  <div class="panel" id="sj-panel">
+    <h2 id="sj-h" class="moment-title"></h2>
+    <p class="scene" id="sj-stem"></p>
+    <div class="mono" style="color:var(--slate);margin:24px 0 12px">
+      How effective would each of these be, in this team, right now
     </div>
-    <div class="rin-block">
-      <div class="rin-lab">What she thought</div>
-      <div class="rin-thought" id="r-thought"></div>
+    <div id="sj-items"></div>
+    <div class="commit-row">
+      <button class="primary" id="sjtNext" disabled>Next →</button>
     </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ PART THREE — REVEALED ══════════════════════════ -->
+<section id="s-dil" class="screen" aria-labelledby="dl-h">
+  <div class="topbar">
+    <span class="mono mono-b" id="dl-count">Part three · decision 1 / 6</span>
+    <span class="mono" style="color:var(--slate)">Choose one</span>
+  </div>
+  <div class="progress" id="dl-prog"></div>
+  <div class="panel" id="dl-panel">
+    <h2 id="dl-h" class="moment-title"></h2>
+    <p class="scene" id="dl-stem"></p>
+    <div class="choices" id="dl-choices"></div>
+  </div>
+  <div class="srcstrip">Each of these costs you something. That is the point of them.</div>
+</section>
+
+<!-- ══════════════════════════ RIN'S CODA ══════════════════════════ -->
+<section id="s-rin" class="screen" aria-label="Rin's read">
+  <div class="topbar">
+    <span class="mono mono-b" id="rin-count" style="color:var(--ochre)">Rin · 1 of 2</span>
+  </div>
+  <div class="panel" id="rin-panel">
+    <div class="rin-lab">Before the numbers</div>
+    <h2 class="moment-title" id="rin-title"></h2>
+    <p class="rin-heard" id="rin-context" style="margin-top:12px"></p>
+
+    <div class="rin-block" style="margin-top:26px">
+      <div class="rin-lab">The response</div>
+      <div class="rin-thought" id="rin-resp"></div>
+      <div class="rin-scores mono" id="rin-scores"></div>
+    </div>
+
     <div class="rin-block" style="margin-bottom:0">
-      <div class="rin-lab">What she said</div>
-      <div id="r-saidwrap"></div>
+      <div class="rin-lab">Rin, who is on this team</div>
+      <div class="rin-said" id="rin-says"></div>
     </div>
   </div>
   <div class="commit-row" style="justify-content:flex-start;margin-left:22px">
-    <button class="primary" id="rNext">Next →</button>
+    <button class="primary" id="rinNext">Next →</button>
   </div>
 </section>
 
-<!-- ══════════════════════════ SOLO RESULTS ══════════════════════════ -->
+<!-- ══════════════════════════ RESULTS ══════════════════════════ -->
 <section id="s-results" class="screen" aria-label="Your result">
   <div class="topbar">
     <span class="mono mono-b">Your result</span>
@@ -725,13 +884,36 @@ body.is-ink .pseg.now{background:var(--ochre)}
   </div>
 
   <div class="res-block panel">
-    <h2>A · Your profile</h2>
-    <div class="profile" id="res-profile"></div>
-    <p class="srcstrip">Behaviour taxonomy and findings: McKinsey, 2021.</p>
+    <h2>A · Situational discrimination</h2>
+    <div class="headline-row">
+      <div class="bignum" id="res-disc"></div>
+      <div class="bignum-side">
+        <p id="res-disc-read"></p>
+      </div>
+    </div>
+    <div class="srcstrip">
+      How closely your 32 effectiveness ratings tracked the key. It measures whether you read the team,
+      not whether you prefer a style.
+    </div>
   </div>
 
-  <div class="res-block panel" style="margin-left:22px"><!-- asymmetric device — results -->
-    <h2>B · Where you land</h2>
+  <div class="res-block panel" style="margin-left:22px">
+    <h2>B · The sequence</h2>
+    <div class="headline-row">
+      <div class="bignum" id="res-seq"></div>
+      <div class="bignum-side">
+        <p id="res-seq-read"></p>
+      </div>
+    </div>
+    <div class="seqbars" id="res-seqbars"></div>
+    <div class="srcstrip">
+      Challenging leadership has no significant effect on psychological safety without a positive team
+      climate already in place. McKinsey, 2021.
+    </div>
+  </div>
+
+  <div class="res-block panel">
+    <h2>C · Where you land</h2>
     <div class="matrix-holder" style="margin-top:22px">
       <div class="matrix-outer">
         <div class="matrix-axes">
@@ -739,7 +921,7 @@ body.is-ink .pseg.now{background:var(--ochre)}
           <div class="matrix" id="soloMatrix"></div>
           <div class="axis-x"><span>low</span><span>Climate</span><span>high</span></div>
         </div>
-        <div class="matrix-caption">2×2 after Amy Edmondson. Axes measured from your own behaviour, not your team’s.</div>
+        <div class="matrix-caption">2×2 after Amy Edmondson. Plotted from the six decisions in part three — what you chose when it cost you, not what you rated.</div>
       </div>
       <div class="matrix-read">
         <h3 id="res-quad"></h3>
@@ -750,17 +932,32 @@ body.is-ink .pseg.now{background:var(--ochre)}
   </div>
 
   <div class="res-block panel">
-    <h2>C · What you didn’t hear</h2>
-    <div id="res-ledger" style="margin-top:16px"></div>
+    <h2>D · What you say against what you chose</h2>
+    <p style="margin-top:12px;max-width:74ch" id="res-gap-lede"></p>
+    <div class="gaptable" id="res-gap"></div>
+    <div class="srcstrip">
+      Part one asked how often you do these things. Part three made each of them cost something.
+      Self-report and forced choice disagree for most people; the size and direction of the disagreement
+      is the finding, not a failure.
+    </div>
   </div>
 
   <div class="res-block panel">
-    <h2>D · Sequence and next step</h2>
-    <div class="seqline">
-      <div class="verdict" id="res-seq"></div>
-      <p class="mono" id="res-seq-means" style="color:var(--slate);margin-top:8px"></p>
-      <p style="margin-top:12px" id="res-seq-note"></p>
-    </div>
+    <h2>E · Where you diverged</h2>
+    <p style="margin-top:12px;max-width:74ch">The judgements furthest from the key, with the reasoning behind it.</p>
+    <div id="res-review" style="margin-top:18px"></div>
+  </div>
+
+  <div class="res-block panel">
+    <h2>F · The key, in full</h2>
+    <p style="margin-top:12px;max-width:74ch">Every keyed rating in the instrument, and the four rules
+      they come from. Disagreeing with the key is a legitimate result — but do it out loud.</p>
+    <div class="keyrules" id="res-keyrules"></div>
+    <div class="keytable-wrap"><table class="keytable" id="res-keytable"></table></div>
+  </div>
+
+  <div class="res-block panel">
+    <h2>G · Next step</h2>
     <div class="devbox">
       <div class="mono mono-b" style="margin-bottom:8px">Development prompt</div>
       <div id="res-dev"></div>
@@ -772,12 +969,14 @@ body.is-ink .pseg.now{background:var(--ochre)}
   </div>
 
   <div class="footlinks">
-    <button class="ghost" data-go="solo">Run solo again</button>
+    <button class="ghost" data-go="solo">Run it again</button>
     <button class="ghost" data-go="class">Try class mode</button>
   </div>
   <div class="srcstrip">
-    McKinsey Global Survey, “Psychological safety and the critical role of leadership development”,
-    11 February 2021. Fielded 14–29 May 2020; 1,574 respondents, 1,223 analysed. 2×2 matrix after Amy Edmondson.
+    Teaching instrument, not a validated assessment: no norms, no reliability data, no predictive claim.
+    Key derived from McKinsey Global Survey, “Psychological safety and the critical role of leadership
+    development”, 11 February 2021. Fielded 14–29 May 2020; 1,574 respondents, 1,223 analysed.
+    2×2 matrix after Amy Edmondson.
   </div>
 </section>
 
@@ -1133,193 +1332,305 @@ var CONSEQUENCE = [
    voice model and the sequence effect the tool exists to teach are inert at that scale.
    Two points per moment restores them: climate-first crosses the gate at moment 4, and
    challenge-first never crosses it at all. Every other parameter in §4.3 is unchanged. */
+/* §4.3 style weights — retained for the Edmondson 2×2, which is plotted from the
+   revealed choices in part three. */
 var STYLE = {
-  support:   { climateW: 1.0,  challengeW: 0.0,  alloc:[2,0,0,0] },
-  consult:   { climateW: 0.85, challengeW: 0.35, alloc:[0,2,0,0] },
-  challenge: { climateW: 0.15, challengeW: 1.0,  alloc:[0,0,2,0] },
-  direct:    { climateW:-0.9,  challengeW: 0.45, alloc:[0,0,0,2] }
+  support:   { climateW: 1.0,  challengeW: 0.0 },
+  consult:   { climateW: 0.85, challengeW: 0.35 },
+  challenge: { climateW: 0.15, challengeW: 1.0  },
+  direct:    { climateW:-0.9,  challengeW: 0.45 }
 };
 
-var MOMENTS = [
-  {
-    title:"Moment 1 — Week one",
-    scene:"The team is four people you inherited and two you hired. Your first working session is tomorrow. You have a plan you’re fairly confident in and forty minutes of agenda for a sixty-minute meeting.",
-    choices:[
-      { s:"consult",   t:"Bring the plan as a draft and spend the last twenty minutes asking where it’s wrong." },
-      { s:"direct",    t:"Present the plan, assign owners, and use the remaining time to unblock people." },
-      { s:"support",   t:"Cut the plan to twenty minutes and spend the rest on how each person likes to work." },
-      { s:"challenge", t:"Present the plan and ask each person what they’d need to deliver it two weeks early." }
-    ],
-    heard:{
-      consult:"You brought the plan as a draft, then spent the last twenty minutes asking where it was wrong.",
-      direct:"You presented the plan, named owners, and used the rest of the hour to unblock people.",
-      support:"You cut the plan to twenty minutes and spent the rest asking how each person likes to work.",
-      challenge:"You presented the plan and asked each person what they’d need to deliver it two weeks early."
-    },
-    said:"Two of us have run this exact scoping before, on the platform team. Worth using that before we start.",
-    withheld:"The two people you inherited have run this exact scoping twice before, on the platform team. Nobody asked what anyone had done before."
-  },
-  {
-    title:"Moment 2 — The quiet flag",
-    scene:"Rin, who joined six weeks ago, sends you a message after the call: “Probably nothing, but the assumption on page 4 might not hold for the EU entities.” She’s right. You’d built three weeks of work on that assumption.",
-    choices:[
-      { s:"support",   t:"Reply thanking her, and tell her privately that catching that took nerve." },
-      { s:"consult",   t:"Take it to the whole team, credit Rin by name, and ask them how to rework it." },
-      { s:"direct",    t:"Fix the model tonight and tell the team the revised numbers in the morning." },
-      { s:"challenge", t:"Ask Rin to own the rework and present the corrected approach herself." }
-    ],
-    heard:{
-      support:"You replied to her message, and told her privately that catching it took nerve.",
-      consult:"You put it to the whole team, said her name, and asked them how to rework it.",
-      direct:"You fixed the model overnight and gave the team revised numbers in the morning.",
-      challenge:"You gave her the rework and asked her to present the corrected approach herself."
-    },
-    said:"The same assumption sits under the week-five reconciliation. It is one problem in two places.",
-    withheld:"The same assumption also sits under the week-five reconciliation step — one problem in two places, and only one of them got fixed."
-  },
-  {
-    title:"Moment 3 — The deadline moves",
-    scene:"The client pulls the date forward by two weeks. The team hears about it in the same email you do. Tomas replies to all within ninety seconds: “That’s not possible.”",
-    choices:[
-      { s:"direct",    t:"Reply to all with a revised plan and the three things you’re cutting." },
-      { s:"consult",   t:"Put an hour in the diary and ask the team what to cut before you decide." },
-      { s:"challenge", t:"Ask the team what would have to be true for it to be possible." },
-      { s:"support",   t:"Call Tomas first, then everyone individually, before touching the plan." }
-    ],
-    heard:{
-      direct:"You replied to all with a revised plan and the three things you were cutting.",
-      consult:"You put an hour in the diary and asked the team what to cut before you decided.",
-      challenge:"You asked the team what would have to be true for it to be possible.",
-      support:"You called Tomas, then everyone else individually, before touching the plan."
-    },
-    said:"Their procurement lead told me in March that the date was soft. I would expect it to move again.",
-    withheld:"The client’s procurement lead told her in March that the date was soft and would probably move again — a relationship nobody knew she had."
-  },
-  {
-    title:"Moment 4 — The room goes quiet",
-    scene:"The office closes; everyone is remote for the quarter. Three weeks in, your calls run to time, the work lands, and almost nobody speaks who isn’t asked a direct question.",
-    choices:[
-      { s:"support",   t:"Start every call with fifteen minutes that has nothing to do with the work." },
-      { s:"consult",   t:"Ask the team to redesign how the calls run and hand them the format." },
-      { s:"direct",    t:"Cut the calls to twenty minutes and move everything else to writing." },
-      { s:"challenge", t:"Rotate who runs the call each week, starting next week." }
-    ],
-    heard:{
-      support:"You started every call with fifteen minutes that had nothing to do with the work.",
-      consult:"You asked the team to redesign the calls, and used the format they gave you.",
-      direct:"You cut the calls to twenty minutes and moved the rest to writing.",
-      challenge:"You put a different person in charge of the call each week, starting the next one."
-    },
-    said:"The people who have gone quiet are the ones whose work is not on the agenda that week. It is the agenda, not the format.",
-    withheld:"The three people who stopped speaking are exactly the ones whose own work isn’t on that week’s agenda. It is the agenda, not the format."
-  },
-  {
-    title:"Moment 5 — The error ships",
-    scene:"A deliverable goes out with a mistake the client spots. It’s Dee’s work, but it passed through you. The team is on the call in eleven minutes.",
-    choices:[
-      { s:"support",   t:"Message Dee first to say you’ve got it, then open the call yourself." },
-      { s:"direct",    t:"Open the call with the correction, the fix and the new check, and move on." },
-      { s:"consult",   t:"Open by asking the team what in the process let it through." },
-      { s:"challenge", t:"Ask Dee to walk the team through what happened and what she’d change." }
-    ],
-    heard:{
-      support:"You told Dee you’d handle it, then opened the call yourself.",
-      direct:"You opened with the correction, the fix and the new check, and moved on.",
-      consult:"You opened by asking the team what in the process let it through.",
-      challenge:"You asked Dee to walk the team through what happened and what she’d change."
-    },
-    said:"I did the same thing in week two and caught it by luck. The check that saved me is not in the process.",
-    withheld:"She made the same error herself in week two and caught it privately. The check that saved her exists nowhere in the process."
-  },
-  {
-    title:"Moment 6 — The stretch",
-    scene:"A senior stakeholder wants the team to take on something none of them has done. It’s a genuine opportunity and a genuine risk. Marcus says, without much conviction, “We can probably do it.”",
-    choices:[
-      { s:"challenge", t:"Take it, and ask each person to name the part they’re least equipped for." },
-      { s:"consult",   t:"Ask the team to decide, and tell them you’ll back either answer upward." },
-      { s:"support",   t:"Take it, and tell them plainly that you’ll carry it if it goes wrong." },
-      { s:"direct",    t:"Take it and staff it yourself, with the two people you’re confident in." }
-    ],
-    heard:{
-      challenge:"You took it, and asked each person to name the part they were least equipped for.",
-      consult:"You asked the team to decide, and said you’d back either answer upward.",
-      support:"You took it, and said you’d carry it if it went wrong.",
-      direct:"You took it and staffed it yourself, with two people."
-    },
-    said:"I worked with a vendor who has built this exact thing. I can get us an introduction this week.",
-    withheld:"There is a vendor who has already built this. She worked with them at her last firm and could have had an introduction inside a week."
-  },
-  {
-    title:"Moment 7 — Two people, both half right",
-    scene:"Rin and Marcus disagree in front of everyone about the approach. Both arguments hold. The disagreement has been running for ten minutes and the temperature is rising.",
-    choices:[
-      { s:"direct",    t:"Make the call, explain your reasoning, and move the meeting on." },
-      { s:"consult",   t:"Ask the rest of the team which risk they’d rather carry." },
-      { s:"support",   t:"Name that the disagreement is a good sign and slow the conversation down." },
-      { s:"challenge", t:"Ask each of them to argue the other’s position for two minutes." }
-    ],
-    heard:{
-      direct:"You made the call, explained your reasoning, and moved the meeting on.",
-      consult:"You asked the rest of the team which risk they’d rather carry.",
-      support:"You said the disagreement was a good sign and slowed the conversation down.",
-      challenge:"You asked each of them to argue the other’s position for two minutes."
-    },
-    said:"You are both assuming the same dependency holds. If it does not, neither approach works.",
-    withheld:"Both approaches fail on the same dependency — which is not the thing either of them was arguing about."
-  },
-  {
-    title:"Moment 8 — The self-assessment",
-    scene:"The client asks the team to present its own view of the work, including what fell short. You’ll be in the room. Whoever speaks, speaks for all of you.",
-    choices:[
-      { s:"challenge", t:"Ask the team to write the harshest fair version, and take it in unedited." },
-      { s:"consult",   t:"Draft it together and let the team decide how candid to be." },
-      { s:"direct",    t:"Write it yourself, keep it tight, and protect the team from overexposure." },
-      { s:"support",   t:"Ask who wants to present, and back whoever volunteers." }
-    ],
-    heard:{
-      challenge:"You asked for the harshest fair version and took it in unedited.",
-      consult:"You drafted it together and let the team decide how candid to be.",
-      direct:"You wrote it yourself and kept it tight.",
-      support:"You asked who wanted to present, and backed the person who volunteered."
-    },
-    said:"The part that fell short was week two, and the client's own team caused half of it. I have the emails.",
-    withheld:"The part that actually fell short was week two — and the client’s own team caused half of it. She has the email trail."
-  }
+var STYLE_ORDER = ["support", "consult", "challenge", "direct"];
+var STYLE_NAME  = { support:"Supportive", consult:"Consultative",
+                    challenge:"Challenging", direct:"Authoritative" };
+
+/* ── PART ONE — STATED. Self-reported frequency, three items per behaviour.
+   This mirrors the form of the source survey, which asked respondents how
+   frequently their team leaders showed each behaviour. ───────────────────── */
+var STATED = [
+  { s:"support",   t:"Notice that someone is struggling before they tell you." },
+  { s:"consult",   t:"Ask for opinions before you have formed your own view." },
+  { s:"challenge", t:"Ask the team for something they have told you is not possible." },
+  { s:"direct",    t:"Make the call yourself when a discussion is taking too long." },
+  { s:"support",   t:"Take the blame upward when the team's work falls short." },
+  { s:"consult",   t:"Hand a decision to the team knowing they may choose differently from you." },
+  { s:"challenge", t:"Put someone in front of a room to do something they have not done before." },
+  { s:"direct",    t:"Set a plan and expect it followed without reopening it." },
+  { s:"support",   t:"Know what is going on in your team's lives outside the work." },
+  { s:"consult",   t:"Change a plan because someone junior objected to it." },
+  { s:"challenge", t:"Tell the team you think it is capable of more than it is delivering." },
+  { s:"direct",    t:"Tell someone their work is not good enough, and what to change." }
+];
+var FREQ = ["Never", "Rarely", "Sometimes", "Often", "Always"];
+
+/* ── PART TWO — JUDGEMENT. Eight situational-judgement items.
+   Every stem shows the team's climate through behavioural evidence and never
+   labels it. `climate` is the keying context, not shown to the respondent.
+   `k` is the keyed effectiveness rating 1–5, derived openly from the article:
+     consultative  — high throughout (direct and indirect effect, β = 0.54)
+     supportive    — high where climate is absent, lower where it already exists
+                     (its effect runs entirely through climate)
+     challenging   — low without a positive climate, high with one
+     authoritative — low throughout (detrimental to psychological safety)
+   Scenarios 3 and 4 are a matched pair, and 1 and 2 differ only in climate.
+   ─────────────────────────────────────────────────────────────────────────── */
+var SJT = [
+  { n:1, climate:"low",
+    title:"Seven weeks in",
+    stem:"You have led this team for seven weeks. In that time nobody has disagreed with you in a meeting, and the two most experienced people speak only when asked a direct question. The delivery plan you wrote was accepted without a single amendment.",
+    r:[
+      { s:"support",   k:5, t:"Spend the next session on how people want to work, and say plainly that you expect to be argued with.",
+        why:"Climate is the strongest single driver of psychological safety, and there is none here yet. This is the move that builds it." },
+      { s:"consult",   k:5, t:"Take the plan back to the team as a draft and ask them to rewrite the sequencing.",
+        why:"Consultative behaviour works both directly on safety and through climate. It is the only behaviour that does both." },
+      { s:"challenge", k:1, t:"Set a target two weeks ahead of the current plan and ask them how they would hit it.",
+        why:"Challenge has no significant effect on psychological safety without a positive climate in place. A plan accepted without amendment is the evidence that there is none." },
+      { s:"direct",    k:2, t:"Accept that the plan is sound, publish it with owners, and move to delivery.",
+        why:"Authoritative behaviour is detrimental to psychological safety. Here it also reads the silence as agreement." }
+    ] },
+
+  { n:2, climate:"high",
+    title:"A year in",
+    stem:"This team has worked together for a year. Last week two of them disagreed with your approach in front of the client's analyst, and they were right. Nobody in the room looked at you to see how you would take it.",
+    r:[
+      { s:"support",   k:3, t:"Thank them privately, and check neither felt exposed by doing it in front of the client.",
+        why:"Not wrong, but supportive behaviour acts on safety only through climate — and the climate is already there. Its marginal value is low." },
+      { s:"consult",   k:4, t:"Ask the team how they want to handle disagreement in front of a client in future.",
+        why:"Consultative behaviour holds its value at every level of climate." },
+      { s:"challenge", k:5, t:"Ask the team to take on the piece of work none of you has done before.",
+        why:"This is what the climate was for. Challenge strengthens safety where a positive climate already exists, and this team has just demonstrated one." },
+      { s:"direct",    k:1, t:"Set the rule that disagreements are settled internally before client meetings.",
+        why:"This spends the thing the team has taken a year to build, in one instruction." }
+    ] },
+
+  { n:3, climate:"low",
+    title:"The error, quiet team",
+    stem:"A deliverable went out with a mistake the client found. It is Dee's work and it passed through you. Dee joined three months ago and has not yet spoken in a meeting without being asked to.",
+    r:[
+      { s:"support",   k:5, t:"Open the call yourself and put the error on your own desk in front of everyone.",
+        why:"The one move that builds climate in the moment it is most exposed. Where climate is absent, supportive behaviour is the highest-value thing available." },
+      { s:"consult",   k:4, t:"Open by asking the team what in the process let it through.",
+        why:"Moves the question off the person and onto the system, and asks before deciding." },
+      { s:"challenge", k:1, t:"Ask Dee to walk the team through what happened and what she would change.",
+        why:"The same sentence that is the best available response in a team with climate is close to the worst in a team without it. That is the finding." },
+      { s:"direct",    k:2, t:"Issue the correction, the fix and the new check in the first two minutes, then move on.",
+        why:"Efficient, and it teaches the team that errors are closed rather than examined." }
+    ] },
+
+  { n:4, climate:"high",
+    title:"The error, open team",
+    stem:"A deliverable went out with a mistake. It is Marcus's work. Twice this quarter Marcus has raised his own errors before anyone else found them, and the team's post-mortems routinely name people without heat.",
+    r:[
+      { s:"support",   k:2, t:"Open the call yourself and take the error onto your own desk.",
+        why:"Protective, and it removes the learning from the person best placed to do it. This team does not need the cover." },
+      { s:"consult",   k:4, t:"Open by asking the team what in the process let it through.",
+        why:"Consultative behaviour holds its value regardless of climate." },
+      { s:"challenge", k:5, t:"Ask Marcus to walk the team through what happened and what he would change.",
+        why:"Word for word the option keyed 1 in the previous scenario. The team, not the sentence, is what changed." },
+      { s:"direct",    k:2, t:"Issue the correction, the fix and the new check, and move on.",
+        why:"Detrimental to safety, and it wastes a team that had already volunteered the harder version." }
+    ] },
+
+  { n:5, climate:"low",
+    title:"The date moves",
+    stem:"The client pulls the date forward by two weeks. Your team is four months old. When you last asked for concerns on a plan you got none, and then three people worked two weekends without telling you.",
+    r:[
+      { s:"support",   k:5, t:"Speak to each person about what the new date does to their week before you touch the plan.",
+        why:"Two silent weekends are the evidence. Climate first, and this is the move that builds it." },
+      { s:"consult",   k:5, t:"Ask the team what to cut, and take their answer back to the client as the team's position.",
+        why:"Asks before deciding and gives the decision away — the behaviour with the strongest measured relationship to psychological safety." },
+      { s:"challenge", k:2, t:"Ask the team what would have to be true for the new date to be possible.",
+        why:"A good question to a team that will answer it honestly. This team has already shown you it will not." },
+      { s:"direct",    k:2, t:"Reply the same day with a revised plan and the three things you are cutting.",
+        why:"Fast and clear, and it guarantees the next two weekends go unreported as well." }
+    ] },
+
+  { n:6, climate:"high",
+    title:"The stretch",
+    stem:"A stakeholder wants the team to take on something none of them has done. This is a team where people routinely say which parts they are worst at, and last month one of them turned a piece of work down as beyond her.",
+    r:[
+      { s:"support",   k:3, t:"Take it, and tell them plainly you will carry it upward if it goes wrong.",
+        why:"Worth saying. It is not the constraint here — the climate that would make it necessary already exists." },
+      { s:"consult",   k:5, t:"Put the decision to the team, and commit in advance to backing either answer.",
+        why:"Autonomy over a decision that is genuinely theirs to make." },
+      { s:"challenge", k:5, t:"Take it, and ask each person to name the part they are least equipped for.",
+        why:"Asking people to exceed what they thought possible, in a team that has proven it can say no. This is the sequence completed." },
+      { s:"direct",    k:1, t:"Take it and staff it yourself with the two people you are confident in.",
+        why:"Detrimental to safety, and it tells the rest of the team what you think of them." }
+    ] },
+
+  { n:7, climate:"low",
+    title:"The room goes quiet",
+    stem:"The team went fully remote nine weeks ago. Calls run to time, the work lands, and nobody speaks who is not asked a direct question. Two people have not raised a single agenda item since the move.",
+    r:[
+      { s:"support",   k:4, t:"Put fifteen minutes at the top of every call that has nothing to do with the work.",
+        why:"Climate's effect on safety was stronger in teams that experienced a greater shift to remote working. Distance makes this move matter more, not less." },
+      { s:"consult",   k:5, t:"Ask the team to redesign how the calls run, and use the format they hand back unchanged.",
+        why:"Gives away a decision that costs you nothing and returns autonomy to people who currently have none." },
+      { s:"challenge", k:2, t:"Rotate who runs the call each week, starting next week.",
+        why:"Exposure without ground to stand on. In a team that already spoke, this would be one of the best moves available." },
+      { s:"direct",    k:1, t:"Cut the calls to twenty minutes and move everything else to writing.",
+        why:"Optimises the symptom. The silence is not a scheduling problem." }
+    ] },
+
+  { n:8, climate:"high",
+    title:"The self-assessment",
+    stem:"The client has asked the team to present its own view of the work, including what fell short. This is a team that has twice put its own mistakes into a client document before you asked them to.",
+    r:[
+      { s:"support",   k:3, t:"Ask who wants to present, and back whoever volunteers.",
+        why:"Sound, and it asks less of the team than the team has already shown it will give." },
+      { s:"consult",   k:4, t:"Draft it together and let the team decide how candid the document is.",
+        why:"Consultative behaviour retains its value here as everywhere." },
+      { s:"challenge", k:5, t:"Ask for the harshest fair version of the assessment, and take it in unedited.",
+        why:"The highest-value move available, and only because of what this team has already demonstrated twice." },
+      { s:"direct",    k:1, t:"Write it yourself, keep it tight, and protect the team from overexposure.",
+        why:"Protection this team has not asked for, at the cost of the thing that made it good." }
+    ] }
 ];
 
-/* §4.4 — 24 monologue blocks, three climate bands per moment */
-var MONOLOGUE = [
-  { low:"I have the same slide from two years ago, at a different firm, where this went badly. I had worked out how to say it on the way in. Forty minutes of agenda and I never found the gap.",
-    mid:"There is a version of this I have watched fail, and I know why it failed. I keep waiting for the moment where saying so would land as useful rather than as a correction. It does not quite arrive.",
-    high:"This is the part I actually know something about, and the room can clearly take it. I do not need a run-up. I say it while it is still early enough to change anything." },
+/* Used when a respondent's judgement matched the key exactly, so Rin is not
+   reacting to an error. Two blocks, pointed at the matched pair. */
+var RIN_EXACT = [
+  { i:2, note:"You rated this one exactly as the key does.",
+    says:"You had Dee down as not ready, and she was not. Three months and she has not finished a sentence in a meeting without being asked to." },
+  { i:3, note:"And this one, which is the same sentence.",
+    says:"Same words, different team, and you moved. That is the part most people do not do — it is easier to have a view about the sentence than about us. Reading it right and doing it when it costs you something are not the same, and the next screen is about the second one." }
+];
 
-  { low:"I wrote “probably nothing” because that is the sentence that lets everybody off, including me. It was not nothing. I have been sitting on the second half of it since Tuesday.",
-    mid:"It got fixed, which is what I wanted. I notice I only said the part I could defend on my own, and left out the part where I would have needed someone to check it with me.",
-    high:"I flagged it and it went somewhere. That is the whole thing — not the credit, the fact that it moved. So I bring the second one as well, before anybody asks." },
+/* ── PART THREE — REVEALED. Six forced choices in which the climate-building
+   option carries an explicit and stated cost. Compared against part one. ──── */
+var DILEMMAS = [
+  { n:1, title:"Friday",
+    stem:"Consulting the team on the sequencing will cost you Friday, and the client asked for the plan by Friday. You have a plan you believe in.",
+    r:[ { s:"consult",   t:"Take the day. Send it Monday with an apology for the delay." },
+        { s:"support",   t:"Send your plan, then spend Friday afternoon with whoever is unhappy about it." },
+        { s:"challenge", t:"Send your plan, and ask the team to find two weeks in it by Monday." },
+        { s:"direct",    t:"Send your plan. It is a good plan." } ] },
+  { n:2, title:"Whose error",
+    stem:"Saying the error was yours rather than Dee's means telling the client you personally signed it off.",
+    r:[ { s:"support",   t:"Tell the client it was yours." },
+        { s:"direct",    t:"Report the correction without attributing it to anyone." },
+        { s:"consult",   t:"Ask the team how they want it handled with the client." },
+        { s:"challenge", t:"Ask Dee to present the fix, and say your part in it if you are asked." } ] },
+  { n:3, title:"Who gets it",
+    stem:"Giving the stretch piece to Rin rather than Marcus is the right development call and materially raises the risk of missing the date.",
+    r:[ { s:"challenge", t:"Give it to Rin." },
+        { s:"direct",    t:"Give it to Marcus." },
+        { s:"consult",   t:"Put it to the two of them and take their answer." },
+        { s:"support",   t:"Give it to Marcus, and give Rin something else that is visible." } ] },
+  { n:4, title:"The feedback",
+    stem:"Asking for the team's real view of your leadership means hearing it in front of everyone, including the two people you rate least.",
+    r:[ { s:"consult",   t:"Ask for it in the open, all of it." },
+        { s:"support",   t:"Ask for it one to one, so nobody has to perform." },
+        { s:"direct",    t:"Ask for it in writing, anonymously, and read it later." },
+        { s:"challenge", t:"Ask them what you would have to change for the team to go faster." } ] },
+  { n:5, title:"Overruled",
+    stem:"Backing the team's decision means telling a senior stakeholder that you were overruled by your own people.",
+    r:[ { s:"consult",   t:"Back the decision and say exactly where it came from." },
+        { s:"direct",    t:"Back the decision and present it as your own." },
+        { s:"support",   t:"Back the decision and keep the team out of the conversation entirely." },
+        { s:"challenge", t:"Back the decision and ask the team to defend it to the stakeholder themselves." } ] },
+  { n:6, title:"Twenty minutes",
+    stem:"Hearing the disagreement out costs you the last twenty minutes of a meeting you needed for something else.",
+    r:[ { s:"support",   t:"Let it run. The other thing waits." },
+        { s:"consult",   t:"Let it run, and ask the rest of the room which risk they would rather carry." },
+        { s:"direct",    t:"Make the call and move the meeting on." },
+        { s:"challenge", t:"Ask each of them to argue the other's case, then move on." } ] }
+];
 
-  { low:"I know something about this date that nobody else in this conversation knows. It would take one sentence. I have watched what happens here to the person who makes the plan more complicated.",
-    mid:"I nearly said it. There is a difference between being allowed to speak and it being worth the friction, and three months in I still cannot tell which side of that line this sits on.",
-    high:"This is exactly the sort of thing I have and nobody else does. It is useful, so I say it, and I do not spend two minutes dressing it up first." },
+/* ── RIN'S CODA. Rin is a mid-level analyst on the team in every one of these
+   scenarios. She speaks to the two judgements that diverged furthest from the
+   key: `over` when the respondent rated a response higher than keyed, `under`
+   when lower. Two sentences, from below, never explaining the model. ──────── */
+var RIN = [
+  { over:{
+      support:  "You would have taken it on yourself, and I would not have had to watch anyone go first. I would also not have learned what happens to someone who does.",
+      consult:  "Asking us was never going to cost you anything here. It is the one you did not need to weigh.",
+      challenge:"Seven weeks in, and you would have asked me to find two weeks in a plan I have not once been told I am allowed to question. I would have said it was doable, and I would have been lying.",
+      direct:   "You read the quiet as agreement. I have been in three teams where that was true and none where it was." },
+    under:{
+      support:  "You marked that one down. It is the only thing in the list that would have told me what happens if I get something wrong here.",
+      consult:  "Being handed the sequencing is the first time anyone would have asked me for anything. You did not rate it highly.",
+      challenge:"Fair. There was nothing under it yet.",
+      direct:   "Agreed. It would have closed the room." } },
 
-  { low:"The calls are quiet and everyone has decided that quiet means working. I have stopped preparing anything I am not directly asked for. That happened over about three weeks and I did not notice it happening.",
-    mid:"I have a fairly specific read on why the room went quiet, and it is not the format. I offer the safe half of it and wait to see what happens to that before I offer the rest.",
-    high:"Somebody had to say the thing about who is actually disappearing from these calls, and why. It is not a comfortable sentence. It is also not a risky one here, which is the difference." },
+  { over:{
+      support:  "Checking we were alright afterwards was kind and slightly beside the point. We already knew we were alright — that is why we did it.",
+      consult:  "No argument. That one was worth having.",
+      challenge:"No argument. We had just shown you we could take it.",
+      direct:   "You would have made the disagreement a private matter. It took us a year to get it out of private." },
+    under:{
+      support:  "You did not rate that highly and you were right. We did not need looking after.",
+      consult:  "Worth more than you gave it. How we do that in front of a client is genuinely unsettled.",
+      challenge:"You marked down the one thing we had spent a year earning the right to be asked.",
+      direct:   "Agreed." } },
 
-  { low:"I made the same mistake in week two. I caught it myself and never told anyone, and now I am watching Dee take this on her own. Saying it now would look like I had been hiding it, which I had.",
-    mid:"I could say that I nearly did the same thing. It would take some of the weight off Dee. I run the sentence twice in my head and it comes out sounding like I am making it about me, so I leave it.",
-    high:"I did this in week two and caught it by luck, not by process. Dee should not be standing there alone for something the process lets through. I say it before the call closes." },
+  { over:{
+      support:  "You would have put it on your own desk. Three months in, that is the only version of this where I learn it is survivable.",
+      consult:  "Asking what let it through was reasonable and it was not the thing that mattered most in that room.",
+      challenge:"You would have asked Dee to stand up and explain herself. She has not finished a sentence in a meeting without being invited to.",
+      direct:   "Two minutes, corrected, moved on. Nobody would have mentioned an error again for a quarter." },
+    under:{
+      support:  "You marked that down. It was the one that would have told Dee what this place does with mistakes.",
+      consult:  "Slightly underrated. It moves the question off the person.",
+      challenge:"Correct. She was not ready and it was not her fault.",
+      direct:   "Correct." } },
 
-  { low:"I know the people who have already built this. I could have an introduction by Friday. Nobody in this room has asked what any of us did before we got here, so I keep it.",
-    mid:"I have a route through this that is cheaper than the one being described. I say I might know someone, which is not the same as saying it, and the conversation moves on without me.",
-    high:"There is a faster way in and I have the relationship. There is no reason not to put it on the table now, while it can still change how this gets staffed." },
+  { over:{
+      support:  "Taking it onto your own desk would have been generous, and Marcus had already put his hand up. You would have taken the lesson off the person who wanted it.",
+      consult:  "Reasonable. Not the strongest thing available in that room.",
+      challenge:"No argument at all.",
+      direct:   "We had already volunteered the harder version. You would have replaced it with a checklist." },
+    under:{
+      support:  "You marked it down, which is right. Marcus did not need protecting.",
+      consult:  "A little underrated.",
+      challenge:"You rated it low. It is the same sentence you may have rated highly for Dee, and the difference between them is the whole thing.",
+      direct:   "Correct." } },
 
-  { low:"They are both wrong about the same thing, and neither can see it because they are arguing one layer above it. I am not walking into the middle of that to explain it to them.",
-    mid:"I can see the dependency sitting underneath both arguments. I try to get into it twice, and both times the room is louder than the point, and the second time I let it go.",
-    high:"The argument itself is fine, it is just aimed at the wrong level. I say so, and the useful part is that neither of them hears it as me taking a side." },
+  { over:{
+      support:  "Asking what the date does to my week is the first time anyone would have asked. I gave up two weekends and told nobody.",
+      consult:  "Being asked what to cut was worth exactly what you rated it.",
+      challenge:"What would have to be true for it to be possible. I would have found you an answer and I would have made it up.",
+      direct:   "A revised plan by the end of the day, and the next two weekends go unreported as well." },
+    under:{
+      support:  "You marked that one down. It is the one where somebody finds out about the weekends.",
+      consult:  "Underrated. We would have told you what to cut if the question had been real.",
+      challenge:"Correct. We were not going to answer it honestly.",
+      direct:   "Correct." } },
 
-  { low:"The section that actually went wrong was week two, and half of it was not us. I have the emails. This is not a room where that gets read as anything except an excuse.",
-    mid:"I would write the week-two section differently and I have the evidence to back it. I offer to draft it, and then I do not push when somebody else picks it up.",
-    high:"I know which part fell short and I know what caused it, including the half that was not ours. Putting it in makes the document better and makes me more exposed. That trade is fine here." }
+  { over:{
+      support:  "Saying you will carry it is decent and we already knew. One of us turned work down last month and nothing happened to her.",
+      consult:  "No argument.",
+      challenge:"No argument. Naming the part I am worst at is the most useful two minutes on that list.",
+      direct:   "Staffing it yourself with the two you trust. The rest of us would have learned exactly where we stand." },
+    under:{
+      support:  "Fine to mark down. It was not the binding constraint.",
+      consult:  "Underrated. That decision was genuinely ours.",
+      challenge:"You marked down the thing this team is for.",
+      direct:   "Correct." } },
+
+  { over:{
+      support:  "Fifteen minutes that is not about the work, on a call where two of us have not raised an item in nine weeks. It is not soft, it is the only channel left.",
+      consult:  "Handing us the format costs you nothing and returns something we have not had since the office shut.",
+      challenge:"Rotating the chair. I would be running a call in a team where I have not volunteered a sentence since March.",
+      direct:   "Twenty minutes and the rest in writing. The calls would get shorter and I would stop preparing anything." },
+    under:{
+      support:  "You rated that low. Distance took away everything that used to happen sideways and that was the replacement.",
+      consult:  "Underrated, and it is the cheapest thing on the list.",
+      challenge:"Correct, for now.",
+      direct:   "Correct." } },
+
+  { over:{
+      support:  "Asking who wants to present is fine. We have put our own mistakes in a client document twice without being asked.",
+      consult:  "Worth what you gave it.",
+      challenge:"No argument. The harshest fair version is the one we would have written anyway.",
+      direct:   "You would have written it yourself to protect us. We had already shown you we did not want protecting." },
+    under:{
+      support:  "Reasonable to mark down.",
+      consult:  "Slightly underrated.",
+      challenge:"You marked down the harshest fair version. It is the one we had already earned the right to write.",
+      direct:   "Correct." } }
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1380,9 +1691,11 @@ function paintGeo(key){
 /* ═══════════════════════════════════════════════════════════════
    SCREEN PLUMBING
    ═══════════════════════════════════════════════════════════════ */
-var SCREENS = ["s-landing","s-setup","s-round","s-cons","s-debrief","s-solo1","s-solo2","s-results"];
+var SCREENS = ["s-landing","s-setup","s-round","s-cons","s-debrief",
+               "s-intro","s-stated","s-sjt","s-dil","s-rin","s-results"];
 var GEOKEY  = { "s-landing":"landing","s-setup":"setup","s-round":"round","s-cons":"cons",
-                "s-debrief":"debrief","s-solo1":"solo1","s-solo2":"solo2","s-results":"results" };
+                "s-debrief":"debrief","s-intro":"solo1","s-stated":"results","s-sjt":"solo1",
+                "s-dil":"cons","s-rin":"solo2","s-results":"results" };
 var current = "s-landing";
 
 function $(id){ return document.getElementById(id); }
@@ -1396,7 +1709,7 @@ function show(id, slideEl){
   current = id;
   document.body.classList.toggle("mode-class",
     id === "s-setup" || id === "s-round" || id === "s-cons" || id === "s-debrief");
-  document.body.classList.toggle("is-ink", id === "s-solo2");
+  document.body.classList.toggle("is-ink", id === "s-rin");
   paintGeo(GEOKEY[id]);
   if (slideEl){ slideEl.classList.remove("slide"); void slideEl.offsetWidth; slideEl.classList.add("slide"); }
   window.scrollTo(0, 0);
@@ -1709,77 +2022,247 @@ function renderClassMatrix(){
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SOLO MODE
+   SOLO MODE — a three-part teaching instrument.
+   Part one  STATED    self-reported frequency, 12 Likert items
+   Part two  JUDGEMENT 8 situational-judgement items, all four rated
+   Part three REVEALED  6 forced choices where the considerate option costs
    ═══════════════════════════════════════════════════════════════ */
 var solo;
 function soloReset(){
-  solo = { i:0, r:0, picks:[], climates:[], spoke:[], theta:62, state:initState() };
+  solo = {
+    stated: new Array(STATED.length).fill(null),   // 1..5
+    ratings: SJT.map(function(){ return [null,null,null,null]; }),
+    picks: new Array(DILEMMAS.length).fill(null),  // style key
+    i: 0, d: 0, rin: 0, divergences: []
+  };
 }
 soloReset();
 
-/* rotate the option order per moment so position is not a tell */
-function rotated(list, k){
-  var out = [], i;
-  for (i = 0; i < list.length; i++) out.push(list[(i + k) % list.length]);
-  return out;
-}
-
-function renderMoment(){
-  var m = MOMENTS[solo.i];
-  $("m-count").textContent = "Moment " + (solo.i + 1) + " / 8";
-  $("m-prog").innerHTML = MOMENTS.map(function(_, i){
-    return '<div class="pseg' + (i < solo.i ? " done" : i === solo.i ? " now" : "") + '"></div>';
+/* ── PART ONE ─────────────────────────────────────────────────── */
+function renderStated(){
+  $("st-items").innerHTML = STATED.map(function(it, i){
+    return '<div class="likert" data-li="' + i + '">' +
+             '<div class="lk-text">' + esc(it.t) + "</div>" +
+             '<div class="lk-scale" role="radiogroup" aria-label="' + esc(it.t) + '">' +
+               FREQ.map(function(f, v){
+                 return '<button type="button" class="lk-b" role="radio" aria-checked="false" ' +
+                        'data-li="' + i + '" data-v="' + (v + 1) + '"><span>' + f + "</span></button>";
+               }).join("") +
+             "</div></div>";
   }).join("");
-  $("m-title").textContent = m.title;
-  $("m-scene").textContent = m.scene;
-  $("m-choices").innerHTML = rotated(m.choices, solo.i % 4).map(function(c, i){
-    return '<button class="choice" data-style="' + c.s + '">' +
-             '<span class="num">' + (i + 1) + "</span><span>" + esc(c.t) + "</span></button>";
+  updateStatedUI();
+  show("s-stated", $("st-panel"));
+}
+function setStated(i, v){
+  solo.stated[i] = v;
+  updateStatedUI();
+}
+function updateStatedUI(){
+  Array.prototype.forEach.call(document.querySelectorAll("#st-items .lk-b"), function(b){
+    var i = +b.getAttribute("data-li"), v = +b.getAttribute("data-v");
+    b.setAttribute("aria-checked", String(solo.stated[i] === v));
+  });
+  var done = solo.stated.filter(function(v){ return v !== null; }).length;
+  $("st-count").textContent = done + " of " + STATED.length + " answered";
+  $("statedNext").disabled = done !== STATED.length;
+}
+
+/* ── PART TWO ─────────────────────────────────────────────────── */
+function renderSJT(){
+  var sc = SJT[solo.i];
+  $("sj-count").textContent = "Part two · situation " + (solo.i + 1) + " / " + SJT.length;
+  $("sj-prog").innerHTML = SJT.map(function(_, k){
+    return '<div class="pseg' + (k < solo.i ? " done" : k === solo.i ? " now" : "") + '"></div>';
   }).join("");
-  show("s-solo1", $("m-panel"));
-}
-
-function pick(style){
-  /* §4.3 — one-point version of the class model: m = 1, d = 1.2, kappa = 0.35,
-     no events, no repetition damping, ceiling 88. Computed, never displayed. */
-  solo.state = stepRound(solo.state, STYLE[style].alloc,
-    { ceiling:88, m:1.0, d:1.2, kappaFixed:0.35, noDamping:true, noEvents:true });
-  var C = solo.state.C;
-  var spoke = C >= solo.theta;
-
-  solo.picks.push(style);
-  solo.climates.push(C);
-  solo.spoke.push(spoke);
-
-  var t = solo.theta;
-  if (spoke) t -= 4;                                   /* trust compounds */
-  if (style === "direct") t += 9;
-  if (style === "challenge" && C < 60) t += 4;
-  solo.theta = clamp(t, 30, 85);
-
-  if (solo.i === 7){ solo.r = 0; renderReplay(); }
-  else { solo.i++; renderMoment(); }
-}
-
-/* ── PASS TWO ────────────────────────────────────────────────── */
-function renderReplay(){
-  var i = solo.r, m = MOMENTS[i], style = solo.picks[i], C = solo.climates[i];
-  $("r-count").textContent = "Rin · moment " + (i + 1) + " / 8";
-  $("r-prog").innerHTML = MOMENTS.map(function(_, k){
-    return '<div class="pseg' + (k < i ? " done" : k === i ? " now" : "") + '"></div>';
+  $("sj-h").textContent = sc.title;
+  $("sj-stem").textContent = sc.stem;
+  $("sj-items").innerHTML = sc.r.map(function(r, j){
+    return '<div class="rate" data-ri="' + j + '">' +
+             '<div class="rt-text"><span class="rt-n">' + (j + 1) + "</span>" + esc(r.t) + "</div>" +
+             '<div class="rt-scale" role="radiogroup" aria-label="Effectiveness of response ' + (j + 1) + '">' +
+               '<span class="rt-end mono">useless</span>' +
+               [1,2,3,4,5].map(function(v){
+                 return '<button type="button" class="rt-b" role="radio" aria-checked="false" ' +
+                        'data-ri="' + j + '" data-v="' + v + '">' + v + "</button>";
+               }).join("") +
+               '<span class="rt-end mono">exactly right</span>' +
+             "</div></div>";
   }).join("");
-  $("r-title").textContent = m.title;
-  $("r-heard").textContent = m.heard[style];
-  $("r-thought").textContent = MONOLOGUE[i][C < 45 ? "low" : C < 65 ? "mid" : "high"];
-  $("r-saidwrap").innerHTML = solo.spoke[i]
-    ? '<div class="rin-said">“' + esc(m.said) + '”</div>'
-    : '<div><span class="unsaid-tag">unsaid</span></div>' +
-      '<div class="rin-said unsaid"><s>' + esc(m.withheld) + "</s></div>";
-  $("rNext").textContent = i === 7 ? "See your result →" : "Next →";
-  show("s-solo2", $("r-panel"));
+  updateSJTUI();
+  show("s-sjt", $("sj-panel"));
+}
+function setRating(j, v){
+  solo.ratings[solo.i][j] = v;
+  updateSJTUI();
+}
+function updateSJTUI(){
+  var row = solo.ratings[solo.i];
+  Array.prototype.forEach.call(document.querySelectorAll("#sj-items .rt-b"), function(b){
+    var j = +b.getAttribute("data-ri"), v = +b.getAttribute("data-v");
+    b.setAttribute("aria-checked", String(row[j] === v));
+  });
+  var done = row.filter(function(v){ return v !== null; }).length === 4;
+  $("sjtNext").disabled = !done;
+  $("sjtNext").textContent = solo.i === SJT.length - 1 ? "Continue to part three →" : "Next →";
+}
+function advanceSJT(){
+  if (solo.ratings[solo.i].indexOf(null) > -1) return;
+  if (solo.i === SJT.length - 1){ solo.d = 0; renderDilemma(); }
+  else { solo.i++; renderSJT(); }
 }
 
-/* ── RESULTS ─────────────────────────────────────────────────── */
+/* ── PART THREE ───────────────────────────────────────────────── */
+function renderDilemma(){
+  var d = DILEMMAS[solo.d];
+  $("dl-count").textContent = "Part three · decision " + (solo.d + 1) + " / " + DILEMMAS.length;
+  $("dl-prog").innerHTML = DILEMMAS.map(function(_, k){
+    return '<div class="pseg' + (k < solo.d ? " done" : k === solo.d ? " now" : "") + '"></div>';
+  }).join("");
+  $("dl-h").textContent = d.title;
+  $("dl-stem").textContent = d.stem;
+  $("dl-choices").innerHTML = d.r.map(function(o, i){
+    return '<button class="choice" data-style="' + o.s + '">' +
+             '<span class="num">' + (i + 1) + "</span><span>" + esc(o.t) + "</span></button>";
+  }).join("");
+  show("s-dil", $("dl-panel"));
+}
+function pickDilemma(style){
+  solo.picks[solo.d] = style;
+  if (solo.d === DILEMMAS.length - 1){ computeDivergences(); solo.rin = 0; renderRin(); }
+  else { solo.d++; renderDilemma(); }
+}
+
+/* ── SCORING ──────────────────────────────────────────────────── */
+function scoreSolo(){
+  var i, j, r, sc;
+
+  /* discrimination: mean absolute deviation from the key, over 32 ratings */
+  var totalDev = 0, n = 0, worst = [];
+  for (i = 0; i < SJT.length; i++){
+    sc = SJT[i];
+    for (j = 0; j < 4; j++){
+      r = solo.ratings[i][j];
+      if (r === null) continue;
+      var dev = r - sc.r[j].k;
+      totalDev += Math.abs(dev); n++;
+      worst.push({ i:i, j:j, dev:dev, abs:Math.abs(dev), given:r, key:sc.r[j].k, s:sc.r[j].s });
+    }
+  }
+  var mad = n ? totalDev / n : 0;
+  var discrimination = Math.round(100 * (1 - mad / 4));
+
+  /* sequence index: how far you shift challenge ratings between climates */
+  var hi = [], lo = [], keyHi = [], keyLo = [];
+  for (i = 0; i < SJT.length; i++){
+    sc = SJT[i];
+    for (j = 0; j < 4; j++){
+      if (sc.r[j].s !== "challenge") continue;
+      if (sc.climate === "high"){ hi.push(solo.ratings[i][j]); keyHi.push(sc.r[j].k); }
+      else { lo.push(solo.ratings[i][j]); keyLo.push(sc.r[j].k); }
+    }
+  }
+  function mean(a){ var t = 0; a.forEach(function(v){ t += v; }); return a.length ? t / a.length : 0; }
+  var seqYou = mean(hi) - mean(lo);
+  var seqKey = mean(keyHi) - mean(keyLo);
+
+  /* style preference: mean rating you gave each behaviour across all situations */
+  var pref = {}, prefN = {};
+  STYLE_ORDER.forEach(function(s){ pref[s] = 0; prefN[s] = 0; });
+  for (i = 0; i < SJT.length; i++)
+    for (j = 0; j < 4; j++){
+      var st = SJT[i].r[j].s;
+      pref[st] += solo.ratings[i][j]; prefN[st]++;
+    }
+  STYLE_ORDER.forEach(function(s){ pref[s] = pref[s] / prefN[s]; });
+
+  /* stated: mean frequency per behaviour */
+  var stated = {}, statedN = {};
+  STYLE_ORDER.forEach(function(s){ stated[s] = 0; statedN[s] = 0; });
+  STATED.forEach(function(it, k){ stated[it.s] += solo.stated[k]; statedN[it.s]++; });
+  STYLE_ORDER.forEach(function(s){ stated[s] = stated[s] / statedN[s]; });
+
+  /* revealed: share of the six costly decisions */
+  var picks = {};
+  STYLE_ORDER.forEach(function(s){ picks[s] = 0; });
+  solo.picks.forEach(function(s){ picks[s]++; });
+
+  /* both expressed as a share of total, so they are comparable */
+  var statedSum = 0;
+  STYLE_ORDER.forEach(function(s){ statedSum += stated[s]; });
+  var gap = {};
+  STYLE_ORDER.forEach(function(s){
+    var sp = (stated[s] / statedSum) * 100;
+    var rp = (picks[s] / DILEMMAS.length) * 100;
+    gap[s] = { statedMean: stated[s], statedPct: sp, picks: picks[s], revealedPct: rp, delta: rp - sp };
+  });
+
+  /* 2×2 from the revealed choices — behaviour under cost, not judgement */
+  var sumC = 0, sumH = 0;
+  solo.picks.forEach(function(s){ sumC += STYLE[s].climateW; sumH += STYLE[s].challengeW; });
+  var nD = DILEMMAS.length;
+  var x = clamp(((sumC - (-0.9 * nD)) / ((1.0 * nD) - (-0.9 * nD))) * 100, 0, 100);
+  var y = clamp((sumH / (1.0 * nD)) * 100, 0, 100);
+
+  worst.sort(function(a, b){ return b.abs - a.abs || b.i - a.i; });
+
+  return { discrimination:discrimination, mad:mad, seqYou:seqYou, seqKey:seqKey,
+           hiMean:mean(hi), loMean:mean(lo), keyHi:mean(keyHi), keyLo:mean(keyLo),
+           pref:pref, stated:stated, picks:picks, gap:gap,
+           x:x, y:y, quad:quadName(x, y), worst:worst };
+}
+
+/* The judgements furthest from the key drive Rin's coda. Where a respondent has
+   fewer than two divergences, the remainder is filled from RIN_EXACT so she is
+   never made to react to an error that was not made. */
+function computeDivergences(){
+  var sc = scoreSolo();
+  var seen = {}, out = [];
+  sc.worst.forEach(function(w){
+    if (out.length >= 2 || seen[w.i] || w.abs === 0) return;
+    seen[w.i] = 1; out.push({ type:"diverge", w:w });
+  });
+  var e = 0;
+  while (out.length < 2 && e < RIN_EXACT.length){
+    var ex = RIN_EXACT[e++];
+    if (seen[ex.i]) continue;
+    seen[ex.i] = 1;
+    /* the challenging response is the one worth pointing at in the matched pair */
+    var j = 0, q;
+    for (q = 0; q < 4; q++) if (SJT[ex.i].r[q].s === "challenge") j = q;
+    out.push({ type:"exact", i:ex.i, j:j, note:ex.note, says:ex.says,
+               given: solo.ratings[ex.i][j], key: SJT[ex.i].r[j].k });
+  }
+  solo.divergences = out;
+}
+
+/* ── RIN'S CODA ───────────────────────────────────────────────── */
+function renderRin(){
+  var c = solo.divergences[solo.rin];
+  var idx = c.type === "diverge" ? c.w.i : c.i;
+  var j   = c.type === "diverge" ? c.w.j : c.j;
+  var sc = SJT[idx], resp = sc.r[j];
+
+  $("rin-count").textContent = "Rin · " + (solo.rin + 1) + " of " + solo.divergences.length;
+  $("rin-title").textContent = sc.title;
+  $("rin-context").textContent = sc.stem;
+  $("rin-resp").textContent = "“" + resp.t + "”";
+
+  if (c.type === "diverge"){
+    $("rin-scores").innerHTML = "You rated it <b>" + c.w.given +
+      "</b> · the key rates it <b>" + c.w.key + "</b>";
+    $("rin-says").textContent = RIN[idx][c.w.dev > 0 ? "over" : "under"][resp.s];
+  } else {
+    $("rin-scores").innerHTML = esc(c.note) + " You rated it <b>" + c.given +
+      "</b> · the key rates it <b>" + c.key + "</b>";
+    $("rin-says").textContent = c.says;
+  }
+
+  $("rinNext").textContent = solo.rin >= solo.divergences.length - 1
+    ? "See your result →" : "Next →";
+  show("s-rin", $("rin-panel"));
+}
+
+/* ── RESULTS ──────────────────────────────────────────────────── */
 var TAXONOMY = {
   support:   { name:"Supportive",    c:"p-support",
                f:"Affects psychological safety only indirectly, through team climate. McKinsey, 2021." },
@@ -1791,154 +2274,217 @@ var TAXONOMY = {
                f:"Command and control. Detrimental to psychological safety. McKinsey, 2021." }
 };
 
+var KEY_RULES = [
+  { s:"consult",   r:"Keyed high in every situation. Consultative behaviour affects psychological safety both directly and through climate — the only one of the four that does both, at a standardised coefficient of 0.54." },
+  { s:"support",   r:"Keyed high where climate is absent, lower where it already exists. Supportive behaviour reaches safety only through climate, so its marginal value falls once the climate is built." },
+  { s:"challenge", r:"Keyed low without a positive climate and high with one. This is the conditional finding the whole instrument turns on." },
+  { s:"direct",    r:"Keyed low throughout. Authoritative behaviour is detrimental to psychological safety, whatever it does for this week's delivery." }
+];
+
 function renderResults(){
-  var c = { support:0, consult:0, challenge:0, direct:0 };
-  solo.picks.forEach(function(s){ c[s]++; });
+  var sc = scoreSolo();
 
-  /* Block A */
-  $("res-profile").innerHTML = ["support","consult","challenge","direct"].map(function(k){
-    var t = TAXONOMY[k];
-    return '<div class="pcard ' + t.c + '"><div class="cnt">' + c[k] + "</div>" +
-           '<div class="nm">' + t.name + '</div><div class="fd">' + esc(t.f) + "</div></div>";
-  }).join("");
+  /* A — discrimination */
+  $("res-disc").textContent = sc.discrimination;
+  $("res-disc-read").textContent = sc.discrimination >= 85
+    ? "You read the team, not the menu. Your ratings moved with the evidence in each stem rather than with a preferred style, which is the skill the survey's central finding actually demands."
+    : sc.discrimination >= 70
+    ? "Broadly in step with the key, with some responses rated on their merits in the abstract rather than against the team in front of you. Section E has the specific ones."
+    : "Your ratings track a preferred style more than they track the team described. The same response is keyed 1 in one situation here and 5 in another; if that gap is not in your ratings, the room is not what you are reading.";
 
-  /* Block B */
-  var sumC = 0, sumH = 0;
-  solo.picks.forEach(function(s){ sumC += STYLE[s].climateW; sumH += STYLE[s].challengeW; });
-  var x = clamp(((sumC + 7.2) / 15.2) * 100, 0, 100);
-  var y = clamp((sumH / 8.0) * 100, 0, 100);
-  var q = quadName(x, y);
+  /* B — the sequence */
+  var sy = sc.seqYou;
+  $("res-seq").textContent = (sy > 0 ? "+" : "") + sy.toFixed(1);
+  $("res-seq-read").textContent = sy >= 2.0
+    ? "You raised your rating of the challenging response by " + sy.toFixed(1) + " points when the team had shown it could take it. The key shifts by " + sc.seqKey.toFixed(1) + ". You are sequencing."
+    : sy >= 0.75
+    ? "You shifted by " + sy.toFixed(1) + " points where the key shifts by " + sc.seqKey.toFixed(1) + ". The instinct is there and it is under-weighted: challenge is worth far more in a team that has proved it can disagree with you, and worth less than nothing in one that has not."
+    : sy > -0.5
+    ? "You rated the challenging response about the same regardless of the team in front of you. The key moves " + sc.seqKey.toFixed(1) + " points between them. Challenge is not a style you have or lack — it is a move that is either earned or not."
+    : "You rated challenge higher in the teams least able to absorb it. That is the inverted sequence, and it is the most expensive error in the instrument.";
+  $("res-seqbars").innerHTML =
+    seqBar("Teams with no climate yet", sc.loMean, sc.keyLo) +
+    seqBar("Teams that had shown it", sc.hiMean, sc.keyHi);
 
-  renderMatrix("soloMatrix", [{ x:x, y:y, label:"You" }]);
-  $("res-quad").textContent = q;
-  $("res-coords").innerHTML = "Climate " + x.toFixed(0) + " · Challenge " + y.toFixed(0) + "<br>" +
-    "Σ climate " + sumC.toFixed(2) + " over [−7.2, 8.0] · Σ challenge " + sumH.toFixed(2) + " over [0, 8.0]";
-  $("res-read").textContent = quadRead(q, c);
+  /* C — the 2×2, from revealed behaviour */
+  renderMatrix("soloMatrix", [{ x:sc.x, y:sc.y, label:"You" }]);
+  $("res-quad").textContent = sc.quad;
+  $("res-coords").innerHTML = "Climate " + sc.x.toFixed(0) + " · Challenge " + sc.y.toFixed(0) +
+    "<br>From " + DILEMMAS.length + " costly decisions: " +
+    STYLE_ORDER.map(function(s){ return STYLE_NAME[s].slice(0,4).toLowerCase() + " " + sc.picks[s]; }).join(" · ");
+  $("res-read").textContent = quadRead(sc);
 
-  /* Block C */
-  var unheard = [];
-  solo.spoke.forEach(function(sp, i){ if (!sp) unheard.push(i); });
-  if (unheard.length){
-    $("res-ledger").innerHTML =
-      "<p>Rin held " + unheard.length + " of 8 contributions back. None of these are feelings. " +
-      "Every one of them was information you did not get.</p>" +
-      '<ul class="ledger">' + unheard.map(function(i){
-        return '<li><span class="lm">Moment ' + (i + 1) + " — " +
-               esc(MOMENTS[i].title.split("— ")[1]) + "</span>" + esc(MOMENTS[i].withheld) + "</li>";
-      }).join("") + "</ul>";
-  } else {
-    $("res-ledger").innerHTML = "<p>" + (y < 50
-      ? "Rin spoke in all eight moments and the ledger is empty. Read that carefully: she was safe throughout and she was never stretched. A team that tells you everything and is asked for nothing is a comfortable team, not a high-performing one."
-      : "Rin spoke in all eight moments and the ledger is empty. Everything she had reached you, and you kept asking the team for more than it thought it could do. That combination is the whole point of the exercise."
-    ) + "</p>";
-  }
+  /* D — stated against revealed */
+  /* The interesting gap is a climate-building behaviour claimed and then not chosen
+     under cost. Fall back to the largest gap of any kind only if there isn't one. */
+  var shortfall = ["consult", "support"].filter(function(s){ return sc.gap[s].delta < -12; })
+    .sort(function(a, b){ return sc.gap[a].delta - sc.gap[b].delta; });
+  var biggest = shortfall.length ? shortfall[0]
+    : STYLE_ORDER.slice().sort(function(a, b){
+        return Math.abs(sc.gap[b].delta) - Math.abs(sc.gap[a].delta);
+      })[0];
+  var g = sc.gap[biggest];
+  $("res-gap-lede").textContent = Math.abs(g.delta) < 12
+    ? "Your self-report and your choices under cost broadly agree. That is less common than you would expect, and it is worth asking a colleague whether they would score you the same way."
+    : g.delta < 0
+      ? "You rate yourself " + g.statedMean.toFixed(1) + " out of 5 on " + STYLE_NAME[biggest].toLowerCase() +
+        " behaviour. When it carried a stated cost, you chose it in " + g.picks + " of " + DILEMMAS.length +
+        " decisions. The gap is not hypocrisy — it is what the behaviour costs, made visible."
+      : "You under-report your " + STYLE_NAME[biggest].toLowerCase() + " behaviour. You rate yourself " +
+        g.statedMean.toFixed(1) + " out of 5, and chose it in " + g.picks + " of " + DILEMMAS.length +
+        " decisions where it cost you something.";
+  $("res-gap").innerHTML =
+    '<div class="gaprow gaphead"><span>Behaviour</span><span>Say</span><span>Chose</span><span>Gap</span></div>' +
+    STYLE_ORDER.map(function(s){
+      var q = sc.gap[s];
+      return '<div class="gaprow"><span>' + STYLE_NAME[s] + "</span>" +
+             "<span>" + q.statedMean.toFixed(1) + "/5</span>" +
+             "<span>" + q.picks + "/" + DILEMMAS.length + "</span>" +
+             '<span class="' + (q.delta < -12 ? "gneg" : q.delta > 12 ? "gpos" : "") + '">' +
+             (q.delta > 0 ? "+" : "") + q.delta.toFixed(0) + "</span></div>";
+    }).join("");
 
-  /* Block D — sequence */
-  var climIdx = [], chalIdx = [];
-  solo.picks.forEach(function(s, i){
-    (s === "support" || s === "consult" ? climIdx : chalIdx).push(i + 1);
+  /* E — review of the largest divergences */
+  var rev = [], seen = {};
+  sc.worst.forEach(function(w){
+    if (rev.length >= 3 || w.abs === 0 || seen[w.i]) return;
+    seen[w.i] = 1; rev.push(w);
   });
-  function mean(a){
-    if (!a.length) return null;
-    var t = 0; a.forEach(function(v){ t += v; }); return t / a.length;
-  }
-  var mc = mean(climIdx), mh = mean(chalIdx), verdict, means, note;
-  if (mc === null || mh === null){
-    verdict = mc === null ? "All challenge" : "All climate";
-    means = mc === null ? "No climate-building choices to average · challenge-building " + mh.toFixed(2)
-                        : "Climate-building " + mc.toFixed(2) + " · no challenge-building choices to average";
-    note = mc === null
-      ? "You never spent a moment building the ground first. Challenging leadership has no significant effect on psychological safety without a positive team climate already in place (McKinsey, 2021) — you asked for the return without laying down the condition it depends on."
-      : "You built climate in all eight moments and never asked the team to exceed what it thought it could do. Climate is the condition for challenge, not a substitute for it.";
-  } else {
-    var ordered = mc < mh;
-    verdict = ordered ? "Ordered" : "Inverted";
-    means = "Mean moment index — climate-building " + mc.toFixed(2) + " · challenge-building " + mh.toFixed(2);
-    note = ordered
-      ? "You built the ground before you asked the team to stand on it. That is the finding: challenging leadership only strengthens psychological safety where a positive team climate already exists (McKinsey, 2021)."
-      : "You asked the team to stretch before you had built the climate to carry it. Challenging leadership has no significant effect on psychological safety without a positive team climate already in place (McKinsey, 2021) — the same eight choices in the other order would not have cost you the same.";
-  }
-  $("res-seq").textContent = verdict;
-  $("res-seq-means").textContent = means;
-  $("res-seq-note").textContent = note;
+  $("res-review").innerHTML = rev.length
+    ? rev.map(function(w){
+        var s = SJT[w.i], r = s.r[w.j];
+        return '<div class="revitem">' +
+          '<span class="lm">' + esc(s.title) + " · " + STYLE_NAME[r.s] + " response</span>" +
+          '<div class="revq">“' + esc(r.t) + '”</div>' +
+          '<div class="revscore mono">You ' + w.given + " · key " + w.key + " · " +
+            (w.dev > 0 ? "over" : "under") + " by " + w.abs + "</div>" +
+          "<p>" + esc(r.why) + "</p></div>";
+      }).join("")
+    : "<p>Every one of your 32 ratings matched the key exactly. Either you have read the article, or the key is easier to reverse-engineer than it should be — both are worth saying out loud.</p>";
 
-  /* Development prompt */
+  /* F — the key in full */
+  $("res-keyrules").innerHTML = KEY_RULES.map(function(k){
+    return '<div class="krule"><span class="tag t-' + k.s + '">' + STYLE_NAME[k.s] + "</span>" +
+           "<p>" + esc(k.r) + "</p></div>";
+  }).join("");
+  $("res-keytable").innerHTML =
+    "<thead><tr><th>Situation</th><th>Climate shown</th>" +
+    STYLE_ORDER.map(function(s){ return "<th>" + STYLE_NAME[s].slice(0, 4) + "</th>"; }).join("") +
+    "</tr></thead><tbody>" +
+    SJT.map(function(s, i){
+      return "<tr><td>" + esc(s.title) + "</td><td>" + (s.climate === "high" ? "positive" : "absent") + "</td>" +
+        STYLE_ORDER.map(function(st){
+          var j = 0, k;
+          for (k = 0; k < 4; k++) if (s.r[k].s === st) j = k;
+          var you = solo.ratings[i][j], key = s.r[j].k;
+          return '<td class="' + (you === key ? "kmatch" : Math.abs(you - key) >= 2 ? "kfar" : "") + '">' +
+                 key + '<span class="kyou">you ' + you + "</span></td>";
+        }).join("") + "</tr>";
+    }).join("") + "</tbody>";
+
+  /* G — development prompt */
   var dev;
-  if ((c.direct + c.challenge) >= 4 && c.consult <= 2){
+  if (sy < 0.75){
     dev = { k:"situational humility",
-      html:"<b>Situational humility.</b> You led decisively and you led from the front. The skill that most " +
-           "reliably converts that into consultative behaviour — a personal-growth mindset, curiosity, the " +
-           "working assumption that somebody in the room knows something you do not — is addressed by just " +
-           "<b>36%</b> of organisations in their development programmes (McKinsey, 2021). Among the least " +
-           "taught, and among the most predictive." };
-  } else if (c.support >= 4 && c.challenge <= 1){
+      html:"<b>Situational humility.</b> Your ratings did not move much with the team in front of you, " +
+           "which is what a fixed idea of good leadership looks like from the inside. The skill that " +
+           "most reliably loosens it — a personal-growth mindset, curiosity, the working assumption that " +
+           "this team is not the last one — is addressed by just <b>36%</b> of organisations in their " +
+           "development programmes (McKinsey, 2021). Among the least taught, and among the most predictive." };
+  } else if (sc.gap.consult.delta < -15 || sc.gap.support.delta < -15){
     dev = { k:"sponsorship",
-      html:"<b>Sponsorship</b> — enabling others’ success ahead of your own. You built a team that was safe " +
-           "and asked very little of it. Sponsorship predicts <i>both</i> consultative and challenging " +
-           "behaviour, and appears in just <b>26%</b> of leadership development programmes (McKinsey, 2021). " +
-           "It is the bridge from a comfortable team to a learning one." };
-  } else {
+      html:"<b>Sponsorship</b> — enabling others' success ahead of your own. You know what the " +
+           "climate-building move is; you rated it correctly. You did not choose it when it cost you " +
+           "something. Sponsorship is the skill that closes exactly that gap, it predicts <i>both</i> " +
+           "consultative and challenging behaviour, and it appears in just <b>26%</b> of leadership " +
+           "development programmes (McKinsey, 2021)." };
+  } else if (sc.pref.direct >= 3.2){
     dev = { k:"open dialogue",
-      html:"<b>Open dialogue.</b> Your profile is mixed, which is usually the right answer. The next increment " +
-           "is deliberateness: name, before each moment, whether you are building the ground or asking the team " +
-           "to stand on it — and do not do the second before the first. Positive team climate is the strongest " +
-           "driver of psychological safety, ahead of leader relations and work design, and just <b>43%</b> of " +
-           "respondents report one (McKinsey, 2021)." };
+      html:"<b>Open dialogue.</b> You rate the decisive option higher than the evidence supports — a mean " +
+           "of " + sc.pref.direct.toFixed(1) + " out of 5 against a key that never puts it above 2. " +
+           "Authoritative behaviour is detrimental to psychological safety, and the cost is paid in what " +
+           "stops reaching you. Positive team climate is the strongest driver of psychological safety, " +
+           "ahead of leader relations and work design, and just <b>43%</b> of respondents report one " +
+           "(McKinsey, 2021)." };
+  } else {
+    dev = { k:"sponsorship",
+      html:"<b>Sponsorship</b> — enabling others' success ahead of your own. You read the room well. The " +
+           "next increment is not judgement, it is giving away the work that would have made you look " +
+           "good. Sponsorship predicts <i>both</i> consultative and challenging behaviour and appears in " +
+           "just <b>26%</b> of leadership development programmes (McKinsey, 2021)." };
   }
   $("res-dev").innerHTML = dev.html;
 
   window.__copyText = [
     "THE SEQUENCE — solo result",
+    "A teaching instrument, not a validated assessment.",
     "",
-    "PROFILE (8 moments)",
-    "  Supportive     " + c.support,
-    "  Consultative   " + c.consult,
-    "  Challenging    " + c.challenge,
-    "  Authoritative  " + c.direct,
+    "SITUATIONAL DISCRIMINATION  " + sc.discrimination + " / 100",
+    "  mean deviation from key: " + sc.mad.toFixed(2) + " points per rating, over 32 ratings",
     "",
-    "WHERE I LAND (Edmondson 2x2)",
-    "  Quadrant: " + q,
-    "  Coordinates: climate " + x.toFixed(0) + "/100, challenge " + y.toFixed(0) + "/100",
-    "  Raw sums: climate " + sumC.toFixed(2) + " over [-7.2, 8.0], challenge " + sumH.toFixed(2) + " over [0, 8.0]",
+    "SEQUENCE INDEX  " + (sy > 0 ? "+" : "") + sy.toFixed(1) + "  (key " + sc.seqKey.toFixed(1) + ")",
+    "  challenge rated " + sc.loMean.toFixed(1) + " in teams with no climate yet",
+    "  challenge rated " + sc.hiMean.toFixed(1) + " in teams that had shown it",
     "",
-    "SEQUENCE",
-    "  " + verdict,
-    "  " + means,
+    "WHERE I LAND (Edmondson 2x2, from 6 costly decisions)",
+    "  Quadrant: " + sc.quad,
+    "  Climate " + sc.x.toFixed(0) + " / 100, challenge " + sc.y.toFixed(0) + " / 100",
     "",
-    "UNHEARD LEDGER",
-    "  " + unheard.length + " of 8 contributions withheld" +
-      (unheard.length ? " (moments " + unheard.map(function(i){ return i + 1; }).join(", ") + ")" : ""),
+    "SAY vs CHOSE",
+    STYLE_ORDER.map(function(s){
+      var q = sc.gap[s];
+      return "  " + STYLE_NAME[s].padEnd(14) + " say " + q.statedMean.toFixed(1) + "/5   chose " +
+             q.picks + "/" + DILEMMAS.length + "   gap " + (q.delta > 0 ? "+" : "") + q.delta.toFixed(0);
+    }).join("\n"),
     "",
-    "DEVELOPMENT PROMPT",
-    "  " + dev.k,
+    "EFFECTIVENESS RATINGS I GAVE, BY BEHAVIOUR (mean of 8)",
+    STYLE_ORDER.map(function(s){
+      return "  " + STYLE_NAME[s].padEnd(14) + sc.pref[s].toFixed(2);
+    }).join("\n"),
     "",
-    "Source: McKinsey Global Survey, \"Psychological safety and the critical role of",
-    "leadership development\", 11 February 2021. Fielded 14-29 May 2020; 1,574",
-    "respondents, 1,223 analysed. 2x2 matrix after Amy Edmondson."
+    "DEVELOPMENT PROMPT: " + dev.k,
+    "",
+    "Key derived from McKinsey Global Survey, \"Psychological safety and the critical",
+    "role of leadership development\", 11 February 2021. Fielded 14-29 May 2020;",
+    "1,574 respondents, 1,223 analysed. 2x2 matrix after Amy Edmondson."
   ].join("\n");
 
   show("s-results", $("s-results"));
 }
 
-function quadRead(q, c){
-  if (q === "Learning")
-    return "You built ground and then asked the team to stand on it — " + c.consult + " consultative and " +
-           c.support + " supportive moves alongside " + c.challenge + " challenging ones. " +
-           (c.direct > 2
-             ? "The " + c.direct + " authoritative calls are the drag on your climate score, and the cheapest thing here to give up."
-             : "You almost never fell back on deciding alone, which is what kept the climate axis where it is.");
-  if (q === "Comfort")
-    return "You spent " + (c.support + c.consult) + " of eight moments on climate and " + c.challenge +
-           " on stretch. The team is safe with you and it is not being asked for much. Comfort is not failure — " +
-           "it is the half of the sequence most leaders complete and then stop at. The other half is asking for " +
-           "more than the team thinks it can do, which only becomes available once the climate is there.";
-  if (q === "Anxiety")
-    return "You asked hard things — " + c.challenge + " challenging and " + c.direct + " authoritative moves — " +
-           "of a team you had spent " + (c.support + c.consult) + " moments building. The demand is not the " +
-           "problem. It arrived before the ground did, and the ledger above is what that cost you in information.";
-  return "Neither axis moved: " + (c.support + c.consult) + " climate-building moves and " + c.challenge +
-         " challenging ones, against " + c.direct + " decisions taken alone. This is the quietest of the four " +
-         "outcomes. Nothing was asked and nothing was built, and a team in this position rarely tells you it is there.";
+function seqBar(label, you, key){
+  function seg(v, cls){
+    var out = "", i;
+    for (i = 1; i <= 5; i++) out += '<div class="sq' + (i <= Math.round(v) ? " " + cls : "") + '"></div>';
+    return out;
+  }
+  return '<div class="seqrow"><div class="sql mono">' + label + "</div>" +
+         '<div class="sqset"><span class="mono">you</span><div class="sqbar">' + seg(you, "f-you") + "</div>" +
+         '<span class="mono sqv">' + you.toFixed(1) + "</span></div>" +
+         '<div class="sqset"><span class="mono">key</span><div class="sqbar">' + seg(key, "f-key") + "</div>" +
+         '<span class="mono sqv">' + key.toFixed(1) + "</span></div></div>";
+}
+
+function times(n){ return n + (n === 1 ? " time" : " times"); }
+
+function quadRead(sc){
+  var p = sc.picks;
+  if (sc.quad === "Learning")
+    return "Under cost you chose the climate-building option " + times(p.support + p.consult) + " out of " +
+           DILEMMAS.length + " and the stretch option " + p.challenge + ". That is the combination the " +
+           "instrument is built to find: ground laid, and then something asked of the people standing on it.";
+  if (sc.quad === "Comfort")
+    return "Under cost you protected the climate — " + (p.support + p.consult) + " of " + DILEMMAS.length +
+           " decisions — and asked for very little. Comfort is the half of the sequence most leaders complete " +
+           "and stop at. The other half only becomes available once the first is done, which for you it is.";
+  if (sc.quad === "Anxiety")
+    return "You chose the demanding option " + times(p.challenge + p.direct) + " out of " + DILEMMAS.length +
+           " and the climate-building one " + (p.support + p.consult) + ". The demand is not the problem. " +
+           "Nothing here was built to carry it, and the cost is paid in what stops reaching you.";
+  return "Under cost you chose neither the climate-building option nor the demanding one with any " +
+         "consistency — " + (p.support + p.consult) + " and " + (p.challenge + p.direct) + " of " +
+         DILEMMAS.length + ". Nothing asked, nothing built. It is the quietest of the four outcomes and the " +
+         "hardest to notice from where you are standing.";
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1962,7 +2508,13 @@ document.addEventListener("click", function(e){
   if (opt){ selectOption(+opt.getAttribute("data-opt")); return; }
 
   var ch = t.closest(".choice");
-  if (ch){ pick(ch.getAttribute("data-style")); }
+  if (ch){ pickDilemma(ch.getAttribute("data-style")); return; }
+
+  var lk = t.closest(".lk-b");
+  if (lk){ setStated(+lk.getAttribute("data-li"), +lk.getAttribute("data-v")); return; }
+
+  var rt = t.closest(".rt-b");
+  if (rt){ setRating(+rt.getAttribute("data-ri"), +rt.getAttribute("data-v")); }
 });
 
 $("startRounds").addEventListener("click", function(){
@@ -1975,8 +2527,15 @@ $("nextRound").addEventListener("click", advanceRound);
 $("dbNext").addEventListener("click", function(){ if (cls.dbPanel < 3){ cls.dbPanel++; renderDebriefPanel(); } });
 $("dbPrev").addEventListener("click", function(){ if (cls.dbPanel > 0){ cls.dbPanel--; renderDebriefPanel(); } });
 $("dbRestart").addEventListener("click", function(){ route("class"); });
-$("rNext").addEventListener("click", function(){
-  if (solo.r === 7) renderResults(); else { solo.r++; renderReplay(); }
+$("startStated").addEventListener("click", renderStated);
+$("statedNext").addEventListener("click", function(){
+  if (solo.stated.indexOf(null) > -1) return;
+  solo.i = 0; renderSJT();
+});
+$("sjtNext").addEventListener("click", advanceSJT);
+$("rinNext").addEventListener("click", function(){
+  if (solo.rin >= solo.divergences.length - 1) renderResults();
+  else { solo.rin++; renderRin(); }
 });
 $("copyBtn").addEventListener("click", function(){
   var txt = window.__copyText || "";
@@ -2018,16 +2577,45 @@ document.addEventListener("keydown", function(e){
     if (e.key === "ArrowLeft"){
       e.preventDefault(); if (cls.dbPanel > 0){ cls.dbPanel--; renderDebriefPanel(); } return;
     }
-  } else if (current === "s-solo1"){
+  } else if (current === "s-intro"){
+    if (e.key === "Enter" || e.key === "ArrowRight"){ e.preventDefault(); renderStated(); return; }
+  } else if (current === "s-dil"){
     if (e.key >= "1" && e.key <= "4"){
-      var b = document.querySelectorAll("#m-choices .choice")[+e.key - 1];
-      if (b){ e.preventDefault(); pick(b.getAttribute("data-style")); }
+      var b = document.querySelectorAll("#dl-choices .choice")[+e.key - 1];
+      if (b){ e.preventDefault(); pickDilemma(b.getAttribute("data-style")); }
       return;
     }
-  } else if (current === "s-solo2"){
+  } else if (current === "s-sjt"){
+    /* rate the next unrated response with 1-5; enter advances */
+    if (e.key >= "1" && e.key <= "5"){
+      var row = solo.ratings[solo.i], next = row.indexOf(null);
+      if (next > -1){ e.preventDefault(); setRating(next, +e.key); }
+      return;
+    }
+    if (e.key === "Backspace"){
+      e.preventDefault();
+      var r2 = solo.ratings[solo.i], last = -1, q;
+      for (q = 0; q < 4; q++) if (r2[q] !== null) last = q;
+      if (last > -1) setRating(last, null);
+      return;
+    }
+    if (e.key === "Enter" || e.key === "ArrowRight"){ e.preventDefault(); advanceSJT(); return; }
+  } else if (current === "s-stated"){
+    if (e.key >= "1" && e.key <= "5"){
+      var nx = solo.stated.indexOf(null);
+      if (nx > -1){
+        e.preventDefault(); setStated(nx, +e.key);
+        var el = document.querySelector('.likert[data-li="' + Math.min(nx + 1, STATED.length - 1) + '"]');
+        if (el) el.scrollIntoView({ block:"center" });
+      }
+      return;
+    }
+    if (e.key === "Enter" && !$("statedNext").disabled){ e.preventDefault(); solo.i = 0; renderSJT(); return; }
+  } else if (current === "s-rin"){
     if (e.key === "ArrowRight" || e.key === "Enter"){
       e.preventDefault();
-      if (solo.r === 7) renderResults(); else { solo.r++; renderReplay(); }
+      if (solo.rin >= solo.divergences.length - 1) renderResults();
+      else { solo.rin++; renderRin(); }
       return;
     }
   }
@@ -2050,7 +2638,7 @@ function route(where){
   } else if (where === "solo"){
     soloReset();
     if (location.hash !== "#solo") history.replaceState(null, "", "#solo");
-    renderMoment();
+    show("s-intro", document.querySelector("#s-intro .panel"));
   } else {
     history.replaceState(null, "", location.pathname + location.search);
     show("s-landing");
@@ -2059,7 +2647,7 @@ function route(where){
 window.addEventListener("hashchange", function(){
   var h = location.hash;
   if (h === "#class" && current !== "s-setup") route("class");
-  else if (h === "#solo" && current !== "s-solo1") route("solo");
+  else if (h === "#solo" && current !== "s-intro") route("solo");
   else if (!h && current !== "s-landing") route("landing");
 });
 
