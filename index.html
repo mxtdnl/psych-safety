@@ -215,6 +215,17 @@ body.mode-class .meter{height:36px}
   body.mode-class .spend-head{margin-bottom:11px}
   body.mode-class .commit-row{margin-top:12px}
   body.mode-class .situation{line-height:1.08}
+
+  /* consequence card side by side rather than stacked */
+  body.mode-class .cons{display:grid;grid-template-columns:1.35fr 1fr;gap:26px;
+    align-items:start;max-width:none;margin-left:20px}
+  body.mode-class .cons .cons-sep{display:none}
+  body.mode-class .cons-b{border-left:var(--key) solid var(--ink);padding-left:22px}
+  body.mode-class #s-cons .commit-row{max-width:none;margin-left:20px}
+  body.mode-class .cons-line{font-size:calc(var(--t-head)*.74)}
+  body.mode-class .deltas{margin:14px 0 18px}
+  body.mode-class .delta{padding:9px 14px;min-width:150px}
+  body.mode-class .why li{margin-bottom:7px}
 }
 .situation{font-family:var(--f-display);text-transform:uppercase;letter-spacing:-0.02em;
   font-size:calc(var(--t-head) * .86);line-height:1.12}
@@ -256,6 +267,19 @@ body.mode-class .meter{height:36px}
 /* consequence card */
 .cons{max-width:960px;margin-left:24px}      /* asymmetric device — consequence screen */
 .cons-choice{font-size:calc(var(--t-body)*.94);line-height:1.4;margin-top:8px;max-width:62ch}
+.mix{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.mix .mc{border:var(--key) solid var(--ink);padding:6px 12px;font-family:var(--f-mono);
+  font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:var(--t-label)}
+.mix .mc-support{background:var(--support);color:var(--ink)}
+.mix .mc-consult{background:var(--ultramarine);color:var(--bone)}
+.mix .mc-challenge{background:var(--bone);color:var(--ink);border-style:dashed;border-color:var(--ultramarine)}
+.mix .mc-direct{background:var(--oxblood);color:var(--bone)}
+.mix .mc-off{background:var(--bone);color:var(--slate);border-color:var(--slate)}
+.why{list-style:none;margin:12px 0 0;padding:0}
+.why li{padding-left:34px;position:relative;margin-bottom:9px;
+  font-size:calc(var(--t-body)*.84);line-height:1.4}
+.why li:last-child{margin-bottom:0}
+.why li:before{content:"\2014";position:absolute;left:0;color:var(--slate)}
 .deltas{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0 24px}
 .delta{border:var(--key) solid var(--ink);padding:12px 18px;min-width:190px}
 .delta .dl{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:var(--t-label)}
@@ -635,11 +659,19 @@ body.is-ink .pseg.now{background:var(--ochre)}
     <span class="chip" id="cons-senior"></span>
   </div>
   <div class="panel cons">
-    <div class="mono" style="color:var(--slate)">You chose</div>
-    <div class="cons-choice" id="cons-choice"></div>
-    <div class="mono" style="color:var(--slate);margin-top:22px">What happened</div>
-    <div class="deltas" id="cons-deltas"></div>
-    <div class="cons-line" id="cons-line"></div>
+    <div class="cons-a">
+      <div class="mono" style="color:var(--slate)">You chose</div>
+      <div class="cons-choice" id="cons-choice"></div>
+      <div class="mix" id="cons-mix"></div>
+      <div class="mono" style="color:var(--slate);margin-top:22px">What happened</div>
+      <div class="deltas" id="cons-deltas"></div>
+      <div class="cons-line" id="cons-line"></div>
+    </div>
+    <div class="cons-b">
+      <hr class="rule cons-sep" style="margin:20px 0 14px">
+      <div class="mono" style="color:var(--slate)">Why the meters moved</div>
+      <ul class="why" id="cons-why"></ul>
+    </div>
   </div>
   <div class="commit-row" style="max-width:960px;margin-left:24px">
     <button class="primary" id="nextRound">Next round →</button>
@@ -695,9 +727,9 @@ body.is-ink .pseg.now{background:var(--ochre)}
   <!-- Panel 3 -->
   <div class="panel" id="db3" hidden>
     <h2>What you were actually spending</h2>
-    <p style="max-width:72ch;margin-top:14px">You chose between responses, not between behaviours. Every response
-      carried a hidden weighting across four leadership styles the survey measured — three points a round,
-      twenty-four across the game. This is where yours went.</p>
+    <p style="max-width:72ch;margin-top:14px">You chose between responses, not between behaviours. Each one
+      carried a weighting across four leadership styles the survey measured — three points a round,
+      twenty-four across the game. Round by round it was a footnote. Added up, it is a profile.</p>
     <div class="tally" id="db3-tally"></div>
     <div class="named">
       <div class="nb n-support">
@@ -1799,7 +1831,7 @@ function commitRound(){
   cls.history.push({
     round: cls.roundIndex + 1, alloc: chosen.w.slice(), posture: chosen.p, text: chosen.t,
     before: before, after: { C:after.C, S:after.S, P:after.P },
-    deltas: after.deltas, gate: after.gate
+    deltas: after.deltas, gate: after.gate, streak: after.streak.slice()
   });
   cls.state = after;
   renderConsequence();
@@ -1811,11 +1843,64 @@ function deltaBlock(label, v){
          '<div class="dv">' + (v > 0 ? "+" : "") + v.toFixed(1) + "</div></div>";
 }
 
+/* Where the chosen response sits across the four leadership styles, and a short
+   account of why each meter moved. The numeric gate threshold stays out of this —
+   it is still the debrief's to reveal. */
+var MIX_NAMES = ["Supportive", "Consultative", "Challenging", "Authoritative"];
+var MIX_KEYS  = ["support", "consult", "challenge", "direct"];
+
+function mixHTML(alloc){
+  return alloc.map(function(n, i){
+    return '<span class="mc ' + (n > 0 ? "mc-" + MIX_KEYS[i] : "mc-off") + '">' +
+           MIX_NAMES[i] + " " + n + "</span>";
+  }).join("");
+}
+
+function whyBullets(h){
+  var a = h.alloc, out = [];
+  var damped = function(i){ return h.streak[i] >= 3; };
+
+  /* the gated behaviour first — it is the round's most consequential fact */
+  if (a[2] > 0){
+    out.push(h.gate
+      ? "<b>Challenging</b> paid. This team was in a state where being asked for more read as confidence, so it lifted climate, safety and delivery together."
+      : "<b>Challenging</b> cost you. Asked of a team in this state it reads as pressure rather than confidence, so it took climate and safety down and delivery with them.");
+  }
+  if (a[3] > 0){
+    out.push(h.deltas.dP > 0
+      ? "<b>Authoritative</b> bought delivery and paid for it in climate and safety" +
+        (h.round >= 4 ? ", and it buys less every round it is used." : ".") +
+        (damped(3) ? " Three rounds of it running: the damage is compounding." : "")
+      : "<b>Authoritative</b> is no longer buying even delivery. The return on it decays every round, and it is still costing climate and safety at full price." +
+        (damped(3) ? " Three rounds of it running: the damage is compounding." : ""));
+  }
+  if (a[1] > 0){
+    out.push("<b>Consultative</b> reached all three meters. It is the only one of the four that touches delivery, climate and safety at once." +
+      (damped(1) ? " Third round running, so it is worth less — repeated the same way it reads as procedure." : ""));
+  }
+  if (a[0] > 0){
+    out.push("<b>Supportive</b> added to climate and nothing else. It never touches safety directly — safety follows climate afterwards." +
+      (damped(0) ? " Third round running, so it is worth less — it starts to read as performative." : ""));
+  }
+
+  /* the coupling term, when it is doing visible work */
+  var spread = h.before.C - h.before.S;
+  if (out.length < 3 && Math.abs(spread) >= 8){
+    out.push(spread > 0
+      ? "Safety is still catching up to climate. It always lags behind it" +
+        (h.round >= 4 ? ", and it lags harder now the team is apart." : ".")
+      : "Safety is running ahead of climate, and climate is pulling it back down.");
+  }
+  return out.slice(0, 3);
+}
+
 function renderConsequence(){
   var h = cls.history[cls.history.length - 1];
   $("cons-count").textContent = "Round " + h.round + " / 8 · committed";
   seniorChip($("cons-senior"));
   $("cons-choice").textContent = h.text;
+  $("cons-mix").innerHTML = mixHTML(h.alloc);
+  $("cons-why").innerHTML = whyBullets(h).map(function(b){ return "<li>" + b + "</li>"; }).join("");
   $("cons-deltas").innerHTML = deltaBlock("Climate", h.deltas.dC)
                              + deltaBlock("Safety", h.deltas.dS)
                              + deltaBlock("Delivery", h.deltas.dP);
